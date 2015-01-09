@@ -1,0 +1,529 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en">
+	<!-- Do not modify. Modifications will be overwritten -->
+
+	<!--    Section 1: Fixed html header -->
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="Content-Style-Type" content="text/css">
+		<meta http-equiv="Content-Script-Type" content="text/javascript">
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+		<title>Map tool</title>
+		<style type="text/css">
+			body {
+				margin: 0px;
+				padding: 0px;
+			}
+			#map_canvas {
+				width: 100%;
+				height: 100%;
+			}
+			#panel {
+				left: 15%;
+				top: 0.5%;
+				position: fixed;
+				z-index: 1;
+				border: 2px solid Coral;
+				font: 14px normal Ubuntu, Verdana, Arial, Helvetica, sans-serif;
+				color: black;
+				background-color: DarkSeaGreen;
+			}
+			#panel_2 {
+				right: 125px;
+				bottom: 16px;
+				position: fixed;
+				z-index: 1;
+				border: 2px solid Coral;
+				font: 14px normal Ubuntu, Verdana, Arial, Helvetica, sans-serif;
+				color: black;
+				background-color: DarkSeaGreen;
+			}
+			#panel_2 span {
+				background-color: DarkSeaGreen;
+			}
+		</style>
+		<script type="text/javascript" src="http://maps.google.com/maps/api/js?libraries=geometry&amp;v=3.exp&amp;sensor=false"></script>
+		<script type="text/javascript" src="./infobox.js"></script>
+		<script type="text/javascript" src="./v3_ll_grat.js"></script>
+
+	<!--    Section 2: Data varying between events -->
+		<script type="text/javascript" src="./origin.js"></script>
+		<script type="text/javascript" src="./carrieres.js"></script>
+		<script type="text/javascript" src="./stations.js"></script>
+
+		<script type="text/javascript">
+			function initialize() {
+
+				// --   Section 3: Fixed Javascript footer, copy of maptool_footer.txt  --
+				var llev = new google.maps.LatLng(lat, lng);
+				var llmap = llev;
+				var colorev = "red";
+				var colorreticule = "Gold";
+
+				// Centered map
+				var map = new google.maps.Map(document.getElementById("map_canvas"), {
+					zoom : 10,
+					center : llmap,
+					mapTypeId : google.maps.MapTypeId.HYBRID,
+					scaleControl : true,
+					overviewMapControl : true,
+					overviewMapControlOptions : {
+						opened : true
+					}
+				});
+
+				// 
+				grid = new Graticule(map, false);
+
+				// Event's thick crown
+				var marker = new google.maps.Marker({
+					position : llev,
+					icon : {
+						url : "http://maps.google.com/mapfiles/kml/shapes/placemark_circle_highlight.png",
+						size : new google.maps.Size(32, 32),
+						scaledSize : new google.maps.Size(32, 32),
+						origin : new google.maps.Point(0, 0),
+						anchor : new google.maps.Point(32/2 -1, 32/2)
+					},
+					map : map
+				});
+
+				// Uncertainty rectangle
+				var dlatm = dlat * 1000;
+				var dlngm = dlng * 1000;
+				var s = google.maps.geometry.spherical.computeOffset(llev, dlatm, 180.0);
+				var sw = google.maps.geometry.spherical.computeOffset(s, dlngm, -90.0);
+				var n = google.maps.geometry.spherical.computeOffset(llev, dlatm, 0.0);
+				var ne = google.maps.geometry.spherical.computeOffset(n, dlngm, 90.0);
+				var rectangle = new google.maps.Rectangle({
+					strokeWeight : 2,
+					strokeColor : "#EE82EE",
+					fillColor : "#EE82EE",
+					fillOpacity : 0.15,
+					map : map,
+					bounds : new google.maps.LatLngBounds(sw, ne)
+				});
+
+				// Concentric Reticle
+				// Concentric
+				for (var i = 0; i <= 20; i++) {// Concentric circles
+					var thick = 0.3 + 0.6 * (i % 5 == 0) + 1.1 * (i % 10 == 0);
+					var ev = new google.maps.Circle({
+						center : llev,
+						radius : i * 1000,
+						strokeWeight : thick,
+						strokeColor : colorreticule,
+						strokeOpacity : 0.8,
+						fillOpacity : 0.00,
+						map : map
+					});
+				}
+
+				// Cross
+				// H bars coords
+				var r = 6378137;	// Earth radius (m) for google maps
+				var inner = 1000 / r * (Math.PI / 180);	// Internal 1km diameter (deg)
+				var lenkm = 22e3;
+				var h1r = lenkm / (r * (Math.cos(lat * Math.PI / 180)));	// Longitude begin-end offsets
+				var h2r = 1000 / (r * (Math.cos(lat * Math.PI / 180)));
+				var h1 = h1r * 180 / Math.PI;	// Big (degree)
+				var h2 = h2r * 180 / Math.PI;	// Little
+
+				// V bars coords
+				var v1r = lenkm / r;	// Latitude begin-end offsets
+				var v2r = 1000 / r;
+				var v1 = v1r * 180 / Math.PI;	// Big
+				var v2 = v2r * 180 / Math.PI;	// Little
+
+				// Draw cross
+				var Cross = [
+					new google.maps.LatLng(lat, lng - h2), 
+					new google.maps.LatLng(lat, lng - h2 - h1), 
+					new google.maps.LatLng(lat, lng + h2), 
+					new google.maps.LatLng(lat, lng + h2 + h1), 
+					new google.maps.LatLng(lat - v1 - v2, lng), 
+					new google.maps.LatLng(lat - v2, lng), 
+					new google.maps.LatLng(lat + v1 + v2, lng), 
+					new google.maps.LatLng(lat + v2, lng)
+				];
+
+				for (var i = 0; i < 4; i++) {
+					var Path = new google.maps.Polyline({
+						path : [ Cross[2 * i], Cross[2 * i + 1] ],
+						strokeColor : colorreticule,
+						strokeOpacity : 0.8,
+						strokeWeight : 1,
+						map : map
+					});
+				}
+
+				// Distance labels
+				var Distances = [5, 10, 20];
+				var ibLabels = [];
+
+				for (var i = 0; i < Distances.length; i++) {
+
+					var label = Distances[i] + "&nbsp;km";
+					var distance = Distances[i] * 1000;
+
+					var ibLabel = new InfoBox({
+						content : label,
+						boxStyle : {
+							border : "0px",
+							//border: "1px solid black",
+							textAlign : "center",
+							fontSize : "6pt",
+							width : "26px",
+							background : colorreticule
+						},
+						disableAutoPan : true,
+						pixelOffset : new google.maps.Size(-26 / 2, 0),
+						position : google.maps.geometry.spherical.computeOffset(llev, distance, 0),
+						closeBoxURL : "",
+						isHidden : false,
+						pane : "mapPane",
+						enableEventPropagation : true
+					});
+					ibLabel.open(map);
+
+					ibLabels[i] = ibLabel;
+				}
+
+				google.maps.event.addListener(map, 'zoom_changed', function() {
+					zoomLevel = map.getZoom();
+					if (zoomLevel >= 9) {
+						for (var i = 0; i < ibLabels.length; i++) {
+							ibLabels[i].setVisible(true);
+						}
+					} else {
+						for (var i = 0; i < ibLabels.length; i++) {
+							ibLabels[i].setVisible(false);
+						}
+					}
+				});
+
+				// setup markers for quarries
+				createCarrieres(map,carrieres);
+
+				// setup markers for quarries
+				createStations(map,stations);
+				
+				// draw line to detecting stations
+				linkStations(map, lat, lng, stations);
+
+
+				// Local Day/Night symbol
+				var ficon, ficontitle;
+
+                                ficontitle = isnight;
+				if (ficontitle == "Jour") {
+					ficon = './logo_daytime.png';
+				} else if (ficontitle == "Nuit") {
+					ficon = './logo_sleepmoon.gif';
+				} else if (ficontitle == "Lunch") {
+					ficon = './logo_sandwich.png';
+				} else {
+					ficon = './logo_void.gif';
+					ficontitle = 'undef';
+                                }
+
+				// Cartouche superieur
+				var pfield1 = document.getElementById('panel-f1');
+				pfield1.innerHTML = 
+					'<img src="' + ficon + '" title="' + ficontitle + '" style="border-width:0px;" alt="' + ficontitle + '"/>' +
+					'<br><span style="font-size:xx-small;">' + ficontitle + '<\/span>';
+
+				var pfield2 = document.getElementById('panel-f2'); // Date
+				pfield2.innerHTML = ":&nbsp;" + String(date);
+
+				var pfield3 = document.getElementById('panel-f3'); // Local time
+				pfield3.innerHTML = weekday + ", " + String(loctime) + " French time";
+
+				var pfield4 = document.getElementById('panel-f4'); // Lon
+				pfield4.innerHTML = String(lng.toFixed(5));
+
+				var pfield5 = document.getElementById('panel-f5'); // Lat
+				pfield5.innerHTML = String(lat.toFixed(5));
+
+				var pfield6 = document.getElementById('panel-f6'); // Event
+				pfield6.innerHTML = ":&nbsp;" + String(idev);
+
+				var pfield7 = document.getElementById('panel-f7'); // Origin
+				pfield7.innerHTML = ":&nbsp;" + String(idorg);
+
+			} // End initialize
+
+			function createCarrieres(map, carrieres) {
+
+				var image = {
+					url: "http://maps.google.com/mapfiles/kml/paddle/Q-ugc.png",
+					// This marker is 64 pixels wide by 64 pixels tall.
+					size: new google.maps.Size(32, 32),
+					// The origin for this image is 0,0.
+					origin: new google.maps.Point(0,0),
+					// The anchor for this image is the base of the flagpole at 0,32.
+					//anchor: new google.maps.Point(0, 32)	// ?
+					//
+					scaledSize: new google.maps.Size(32, 32)
+				};
+
+				// clickable region of the icon (a polygon as a series of X,Y points)
+				var shape = {
+					coords: [ 15,29, 5,12, 5,4, 9,0, 21,0, 25,4, 25,12, 15,29 ],
+					//coords: [ 1,1, 1,32, 32,32, 32,1 ],
+					type: 'poly'
+				};
+
+				for ( var i=0; i < carrieres.length; i++ ) {
+
+					var carriere = carrieres[i];
+
+					// nom,adresse,departement,codepostal,nomcommune,inseecommune,lambert2x,lambert2y,substance,lon,lat
+
+					//var markTitle = carriere[0];	// nom
+					var markTitle = "Q-" + (i+1);
+
+					var lng = carriere[9];	// longitude
+					var lat = carriere[10];	// latitude
+
+					var myLatlng = new google.maps.LatLng(lat,lng);
+
+					var marker = new google.maps.Marker({
+						map: map,
+						position: myLatlng,
+						title: markTitle,
+						icon: image,
+						shape: shape,
+						zIndex: i+1
+						//others: ?
+					});
+
+					var contentString = 
+						'<div style="width:500px; height:180px;">' +
+						'<dl style="overflow:hidden;">' +
+						'<dt style="float:left; width:20%; background-color:DarkGray;">nom</dt>' +
+						'<dd style="padding:0; margin:0; float:left; width:80%; background-color:DarkGray;">' + formatText(carriere[0]) + '</dd>' +
+						'<dt style="float:left; width:20%; background-color:LightGray;">adresse</dt>' +
+						'<dd style="padding:0; margin:0; float:left; width:80%; background-color:LightGray;">' + formatText(carriere[1]) + '</dd>' +
+						'<dt style="float:left; width:20%; background-color:DarkGray;">departement</dt>' +
+						'<dd style="padding:0; margin:0; float:left; width:80%; background-color:DarkGray;">' + formatText(carriere[2]) + '</dd>' +
+						'<dt style="float:left; width:20%; background-color:LightGray;">codepostal</dt>' +
+						'<dd style="padding:0; margin:0; float:left; width:80%; background-color:LightGray;">' + formatText(carriere[3]) + '</dd>' +
+						'<dt style="float:left; width:20%; background-color:DarkGray;">nomcommune</dt>' +
+						'<dd style="padding:0; margin:0; float:left; width:80%; background-color:DarkGray;">' + formatText(carriere[4]) + '</dd>' +
+						'<dt style="float:left; width:20%; background-color:LightGray;">inseecommune</dt>' +
+						'<dd style="padding:0; margin:0; float:left; width:80%; background-color:LightGray;">' + formatText(carriere[5]) + '</dd>' +
+						'<dt style="float:left; width:20%; background-color:DarkGray;">latitude</dt>' +
+						'<dd style="padding:0; margin:0; float:left; width:80%; background-color:DarkGray;">' + lat + '</dd>' +
+						'<dt style="float:left; width:20%; background-color:LightGray;">longitude</dt>' +
+						'<dd style="padding:0; margin:0; float:left; width:80%; background-color:LightGray;">' + lng + '</dd>' +
+						'<dt style="float:left; width:20%; background-color:DarkGray;">substance</dt>' +
+						'<dd style="padding:0; margin:0; float:left; width:80%; background-color:DarkGray;">' + formatText(carriere[8]) + '</dd>' +
+						'</dl>' +
+						'</div>';
+
+
+					attachMessage(map, marker, contentString);
+
+				}	// end for() carrieres
+			}
+
+			function createStations(map, stations) {
+				if ( stations.length == 0 ) return;
+
+				var image = {
+					url: "http://maps.google.com/mapfiles/kml/shapes/road_shield3.png",
+					// This marker is 64 pixels wide by 64 pixels tall.
+					size: new google.maps.Size(16, 16),
+					// The origin for this image is 0,0.
+					origin: new google.maps.Point(0,0),
+					// The anchor for this image is the base of the flagpole at 0,32.
+					anchor: new google.maps.Point(8, 8),	// ?
+					//
+					scaledSize: new google.maps.Size(16, 16)
+				};
+
+				// clickable region of the icon (a polygon as a series of X,Y points)
+                var ofs = 8;
+				var shape = {
+					coords: [ ofs+4,ofs-8,  ofs+8,ofs-4,  ofs+8,ofs+0,  ofs+8,ofs+4,  ofs+4,ofs+8,  ofs-4,ofs+8,  
+					          ofs-8,ofs+4,  ofs-8,ofs-4,  ofs-4,ofs-8],
+					type: 'poly'
+				};
+
+                // Stations layer
+				for ( var i=0; i < stations.length; i++ ) {
+
+					// var station = stations[i];
+
+					var markTitle = "S-" + (i+1);
+					
+					// lon lat
+					var lng = stations[i][2];	// longitude
+					var lat = stations[i][3];	// latitude
+					var myLatlng = new google.maps.LatLng(lat,lng);
+
+					var marker = new google.maps.Marker({
+						map: map,
+						position: myLatlng,
+						title: markTitle,
+						icon: image,
+						shape: shape,
+						zIndex: i+1
+						//others: ?
+					});
+					
+					// Label when clic
+                    // 				console.log(i);
+                    label = stationLabel(stations[i]);
+					attachMessage(map, marker, label);
+				}	// end for() stations
+
+			}
+
+        // Create stations triged/untriged label
+			function stationLabel(station) {	
+				    //console.log('label ***');			
+				    //console.log(station);			
+                    if (station[4])  // Size hight for triged stations
+                    {
+                        var label = '<div style="width:180px; height:160px;s">';
+                    }else{
+                    	var label = '<div style="width:180px; height:100px;s">';
+                    }
+                    
+					label += // Fix part
+						'<dl style="overflow:hidden;">' +
+						'<h3>' + formatText(station[0]) + ' ' + formatText(station[1]) + '</h3>'  +					
+						'<dt style="float:left; width:40%; background-color:DarkGray;">Latitude</dt>' +
+						'<dd style="padding:0; margin:0; float:left; width:60%; background-color:DarkGray;">' + lat + '</dd>' +
+						'<dt style="float:left; width:40%; background-color:LightGray;">Longitude</dt>' +
+						'<dd style="padding:0; margin:0; float:left; width:60%; background-color:LightGray;">' + lng + '</dd>' ;
+
+                    if (station[4])  {// Trig part
+					    label += 
+						'<dt style="float:left; width:40%; background-color:DarkGray;overflow:hidden;">Azimuth</dt>' +
+						'<dd style="padding:0; margin:0; float:left; width:60%; background-color:DarkGray;overflow:hidden;">' + station[5] + '</dd>' +
+						'<dt style="float:left; width:40%; background-color:LightGray;overflow:hidden;">Dist (deg)</dt>' +
+						'<dd style="padding:0; margin:0; float:left; width:60%; background-color:LightGray;overflow:hidden;">' + station[6] + '</dd>' +
+						'<dt style="float:left; width:40%; background-color:DarkGray;overflow:hidden;">Residual (s)</dt>' +
+						'<dd style="padding:0; margin:0; float:left; width:60%; background-color:DarkGray;overflow:hidden;">' + station[7] + '</dd>' ;
+				    }
+                    label += '</dl> </div>';
+
+				return label;
+			}
+
+
+			function attachMessage(map, marker, message) {
+
+				var infowindow = new google.maps.InfoWindow({
+					content: message,
+					//size: new google.maps.Size(500,180)
+				});
+/*
+				google.maps.event.addListener(marker, 'mouseover', function(overEvent) {
+					clearTimeout(this.timer);	// timeout id 
+					this.timer = setTimeout(function() { infowindow.open(map,marker); }, 350);
+
+					google.maps.event.addListenerOnce(this, 'mouseout', function(outEvent) {
+						clearTimeout(this.timer);
+						if ( infowindow.getMap() ) infowindow.close(); 
+					});
+				});
+*/
+
+  				google.maps.event.addListener(marker, 'click', function(event) {
+					//alert("event.latLng = " + event.latLng);
+  					//alert("infowindow = " + typeof infowindow);
+  					//marker.getMap()
+  					//infoWnd.setContent("<strong>" + params.others.name + "</strong>");
+					infowindow.open(map,marker);
+				});
+
+			}
+
+			function formatText(str) {
+
+				str = ( str != null ? str.trim() : "" );
+
+				if ( str.length == 0 ) str = "&nbsp;";
+
+				return str;
+			}
+			
+			
+			
+			// Tie trigged stations to origin
+			function linkStations(map, lat, lon, stations) {
+				if ( stations.length == 0 ) return;
+				
+				for (var i = 0; i<stations.length; i++){
+					if ( !stations[i][4]) continue;	// Jump untrigged stations
+					var line = new google.maps.Polyline({
+    					path: [new google.maps.LatLng(lat,lon), new google.maps.LatLng(stations[i][3], stations[i][2])],
+    					strokeColor: "#FFFFFF",
+    					//strokeOpacity: 1.0,
+    					strokeWeight: 1,
+    					map: map
+					});
+				}
+				
+			}
+			
+		</script>
+	</head>
+	<body onload="initialize()">
+		<div id="map_canvas"><!-- Google Maps --></div>
+		<div id="panel">
+			<div style="margin:5px;">
+				<div id="panel-f1" style="float:left; margin:2px;"><!-- Icone Jour/Nuit -->
+					+ '<img src="' + ficon + '" title="' + ficontitle + '" style="border-width:0px;" alt="' + ficontitle + '"/>'
+					+ '<br><span style="font-size:xx-small;">' + ficontitle + '</span>'
+				--></div>
+				<div style="float:left;margin-left:7px;"> <!-- Titres Date/Local time  -->
+					<span style="width:100%; float:right; text-align:right; font-style: italic;">UTC</span>
+					
+				</div> 
+				<div style="float:left;"> <!-- Date/Local time valeurs -->
+					<span id="panel-f2" style="background-color:DarkSeaGreen;"><!-- + date + &nbsp;UTC--></span><!-- NO WHITESPACES
+					--><br><span style="float:left;margin-left:10px;">(</span><!-- NO WHITESPACES
+					--><span id="panel-f3" style="background-color:DarkSeaGreen;font-style: italic;"><!-- + local time + --></span><!-- NO WHITESPACES
+					--><span>)</span>
+				</div>
+				<div style="float:left; margin-left:10px;"> <!-- Titres Lon/Lat time  -->
+					<span style="floatnone; text-align:left; font-style: italic;">Lon</span><!-- NO WHITESPACES
+					--><br><span style="floatnone; text-align:right; font-style: italic;">Lat</span>
+				</div>
+				<div style="float:left;"> <!-- Lon/Lat time separateurs -->
+					:&nbsp;<br>:&nbsp;
+				</div>
+				<div style="float:left;"> <!-- Lon/Lat valeurs  -->
+					<span id="panel-f4" style="width:100%; float:right; text-align:right; background-color:DarkSeaGreen;"><!-- + lng.toFixed(5) + --></span>
+					<br><span id="panel-f5" style="width:100%; float:right; text-align:right; background-color:DarkSeaGreen;"><!-- + lat.toFixed(5) + --></span>
+				</div>
+				<div style="float:left; margin-left:10px;"> <!-- Titres event/origin  -->
+					<span style="width:100%; float:right; text-align:right; font-style: italic;">Event</span>
+					<br><span style="width:100%; float:right; text-align:left; font-style: italic;">Org</span>
+				</div>				
+				<div style="float:left;"> <!-- Valeurs event/origin -->
+					<span id="panel-f6" style="background-color:DarkSeaGreen;"><!-- + idev + --></span><!-- NO WHITESPACES
+					--><br><span id="panel-f7" style="background-color:DarkSeaGreen;"><!-- + idorg + --></span>
+				</div> 
+			</div>
+		</div>
+		<div id="panel_2">
+			<div style="margin:5px; font-size:xx-small; background-color:yellow">
+				<span style="display:inline-block; vertical-align:middle;">
+					<img src="http://maps.google.com/mapfiles/kml/shapes/placemark_circle_highlight.png" title="Earthquake" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Earthquake">Earthquake&nbsp;&nbsp;
+				</span><!-- NO WHITESPACES
+				--><span style="display:inline-block; vertical-align:middle;"><!-- NO WHITESPACES
+				--><img src="http://maps.google.com/mapfiles/kml/paddle/Q-ugc.png" title="Quarry" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Quarry">Quarry&nbsp;&nbsp; 
+				</span><!-- NO WHITESPACES
+				--><span style="display:inline-block; vertical-align:middle;">
+					<img src="http://maps.google.com/mapfiles/kml/shapes/road_shield3.png" title="Station" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Station">Station
+				</span>
+			</div>
+		</div>
+	</body>
+</html>
