@@ -208,14 +208,14 @@
 				// setup markers for quarries
 				createStations(map,stations);
 				
-				// draw line to detecting stations
+				// draw line to trigged stations
 				linkStations(map, lat, lng, stations);
 
 
 				// Local Day/Night symbol
 				var ficon, ficontitle;
 
-                                ficontitle = isnight;
+                ficontitle = isnight;
 				if (ficontitle == "Jour") {
 					ficon = './logo_daytime.png';
 				} else if (ficontitle == "Nuit") {
@@ -225,7 +225,23 @@
 				} else {
 					ficon = './logo_void.gif';
 					ficontitle = 'undef';
-                                }
+                }
+                                
+               // var fs = require('fs');
+                var tit = '/Volumes/SharedFolders/Resif/Data/catalogue-SiHex/Artif/test.lst';
+                //fs.readFile(tit, function(err, data) {
+                //    if(err) throw err;
+                //    var array = data.toString().split("\n");
+                //    for(i in array) {
+                //        console.log(array[i]);
+                //    }
+                // });
+
+//var fs = require('fs');
+//var array = fs.readFileSync(tit).toString().split("\n");
+//for(i in array) {
+//    console.log(array[i]);
+//}
 
 				// Cartouche superieur
 				var pfield1 = document.getElementById('panel-f1');
@@ -274,7 +290,7 @@
 					type: 'poly'
 				};
 
-				for ( var i=0; i < carrieres.length; i++ ) {
+				for ( var  i=0; i < carrieres.length; i++ ) {
 
 					var carriere = carrieres[i];
 
@@ -381,11 +397,11 @@
 
 			}
 
-        // Create stations triged/untriged label
+        // Create stations label
 			function stationLabel(station) {	
 				    //console.log('label ***');			
 				    //console.log(station);			
-                    if (station[4])  // Size hight for triged stations
+                    if (station[4])  // Higher for trigged
                     {
                         var label = '<div style="width:180px; height:160px;s">';
                     }else{
@@ -477,10 +493,7 @@
 		<div id="map_canvas"><!-- Google Maps --></div>
 		<div id="panel">
 			<div style="margin:5px;">
-				<div id="panel-f1" style="float:left; margin:2px;"><!-- Icone Jour/Nuit -->
-					+ '<img src="' + ficon + '" title="' + ficontitle + '" style="border-width:0px;" alt="' + ficontitle + '"/>'
-					+ '<br><span style="font-size:xx-small;">' + ficontitle + '</span>'
-				--></div>
+				<div id="panel-f1" style="float:left; margin:2px;"></div>
 				<div style="float:left;margin-left:7px;"> <!-- Titres Date/Local time  -->
 					<span style="width:100%; float:right; text-align:right; font-style: italic;">UTC</span>
 					
