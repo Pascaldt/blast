@@ -2,7 +2,7 @@
 <html lang="en">
 	<!-- Do not modify. Modifications will be overwritten -->
 
-	<!--    Section 1: Fixed html header -->
+	<!--    Section 1: header -->
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta http-equiv="Content-Style-Type" content="text/css">
@@ -46,10 +46,11 @@
 		<script type="text/javascript" src="./infobox.js"></script>
 		<script type="text/javascript" src="./v3_ll_grat.js"></script>
 
-	<!--    Section 2: Data varying between events -->
+	<!--    Section 2: Data js arrays -->
 		<script type="text/javascript" src="./origin.js"></script>
 		<script type="text/javascript" src="./carrieres.js"></script>
 		<script type="text/javascript" src="./stations.js"></script>
+		<script type="text/javascript" src="./Catalogue_SiHex_Mw.js"></script>
 
 		<script type="text/javascript">
 			function initialize() {
@@ -157,7 +158,7 @@
 					});
 				}
 
-				// Distance labels
+				// Reticle distances labels
 				var Distances = [5, 10, 20];
 				var ibLabels = [];
 
@@ -202,6 +203,9 @@
 					}
 				});
 
+				// Catalog quakes
+				createQuakes(map,catalog,llev);
+
 				// setup markers for quarries
 				createCarrieres(map,carrieres);
 
@@ -227,24 +231,9 @@
 					ficontitle = 'undef';
                 }
                                 
-               // var fs = require('fs');
-                var tit = '/Volumes/SharedFolders/Resif/Data/catalogue-SiHex/Artif/test.lst';
-                //fs.readFile(tit, function(err, data) {
-                //    if(err) throw err;
-                //    var array = data.toString().split("\n");
-                //    for(i in array) {
-                //        console.log(array[i]);
-                //    }
-                // });
 
-//var fs = require('fs');
-//var array = fs.readFileSync(tit).toString().split("\n");
-//for(i in array) {
-//    console.log(array[i]);
-//}
-
-				// Cartouche superieur
-				var pfield1 = document.getElementById('panel-f1');
+				// Preparer cartouche superieur
+				var pfield1 = document.getElementById('panel-f1'); //Write chosen logo to html day/night/noon
 				pfield1.innerHTML = 
 					'<img src="' + ficon + '" title="' + ficontitle + '" style="border-width:0px;" alt="' + ficontitle + '"/>' +
 					'<br><span style="font-size:xx-small;">' + ficontitle + '<\/span>';
@@ -293,12 +282,9 @@
 				for ( var  i=0; i < carrieres.length; i++ ) {
 
 					var carriere = carrieres[i];
-
 					// nom,adresse,departement,codepostal,nomcommune,inseecommune,lambert2x,lambert2y,substance,lon,lat
-
 					//var markTitle = carriere[0];	// nom
 					var markTitle = "Q-" + (i+1);
-
 					var lng = carriere[9];	// longitude
 					var lat = carriere[10];	// latitude
 
@@ -337,12 +323,51 @@
 						'<dd style="padding:0; margin:0; float:left; width:80%; background-color:DarkGray;">' + formatText(carriere[8]) + '</dd>' +
 						'</dl>' +
 						'</div>';
-
-
 					attachMessage(map, marker, contentString);
-
 				}	// end for() carrieres
 			}
+
+			// Quakes catalog near event
+			function createQuakes(map, catalog,llev) {
+				radius2 = Math.pow(0.40,2)
+				if ( catalog.length == 0 ) return;
+				for ( var i=0; i < catalog.length; i++ ) {
+//				for ( var i=0; i < 1000; i++ ) {
+
+					// lon lat
+					var lng = catalog[i][4];	// longitude
+					var lat = catalog[i][3];	// latitude
+
+                    // Restrict catalog to 0.50 deg radius
+					if (Math.pow(Math.cos(llev.lat()*Math.PI/180)*(lng-llev.lng()),2) + Math.pow(lat-llev.lat(),2)>radius2) continue;
+					//var myLatlng = new google.maps.LatLng(lat,lng);
+					
+					// Choose natural/artificial symbole
+	                if (catalog[i][7] == 'ke' || catalog[i][7] == 'se' ||catalog[i][7] == 'ls') 
+                    {
+                        cata_icon = './logo_quake_natural.png';
+                    }else{
+                        cata_icon = './logo_quake_artificial.png';
+                    }
+    
+					var marker = new google.maps.Marker({
+						map: map,
+//						position: myLatlng,
+						position: {lat:lat,lng:lng},
+						//title: markTitle,
+                        icon : {
+                        	url : cata_icon,
+							//size : new google.maps.Size(16, 16),
+							scaledSize : new google.maps.Size(16, 16),
+							//origin : new google.maps.Point(0, 0),
+							anchor : new google.maps.Point(16, 14)
+						},
+					});
+										// Label when clic
+                    label = cataLabel(catalog[i]);
+					attachMessage(map, marker, label);
+				}
+			} 
 
 			function createStations(map, stations) {
 				if ( stations.length == 0 ) return;
@@ -390,14 +415,13 @@
 					});
 					
 					// Label when clic
-                    // 				console.log(i);
                     label = stationLabel(stations[i]);
 					attachMessage(map, marker, label);
 				}	// end for() stations
 
 			}
 
-        // Create stations label
+        // Stations label
 			function stationLabel(station) {	
 				    //console.log('label ***');			
 				    //console.log(station);			
@@ -430,6 +454,32 @@
 				return label;
 			}
 
+        // Catalog label
+			function cataLabel(cata) {	
+                    var label = '<div style="width:150px; height:185px;s">';
+   					label += 
+						'<dl style="overflow:hidden;">' +
+						'<h3>' + "SiHex" + '</h3>'  +					
+						'<dt style="float:left; width:40%; background-color:DarkGray;">Date</dt>' +
+						'<dd style="padding:0; margin:0; float:left; width:60%; background-color:DarkGray;">' + cata[1] + '</dd>' +
+						'<dt style="float:left; width:40%; background-color:LightGray;">Time</dt>' +
+						'<dd style="padding:0; margin:0; float:left; width:60%; background-color:LightGray;">' + cata[2] + '</dd>' +
+						'<dt style="float:left; width:40%; background-color:LightGray;overflow:hidden;">Deph</dt>' +
+						'<dd style="padding:0; margin:0; float:left; width:60%; background-color:LightGray;overflow:hidden;">' + cata[5] + "(km)" + '</dd>' +
+						'<dt style="float:left; width:40%; background-color:LightGray;overflow:hidden;">Mw</dt>' +
+						'<dd style="padding:0; margin:0; float:left; width:60%; background-color:LightGray;overflow:hidden;">' + cata[8] + '</dd>' +
+						'<dt style="float:left; width:40%; background-color:DarkGray;">Lon</dt>' +
+						'<dd style="padding:0; margin:0; float:left; width:60%; background-color:DarkGray;">' + cata[4] + '</dd>' +
+						'<dt style="float:left; width:40%; background-color:DarkGray;overflow:hidden;">Lat</dt>' +
+						'<dd style="padding:0; margin:0; float:left; width:60%; background-color:DarkGray;overflow:hidden;">' + cata[3] + '</dd>' +
+						'<dt style="float:left; width:40%; background-color:DarkGray;overflow:hidden;">Id</dt>' +
+						'<dd style="padding:0; margin:0; float:left; width:60%; background-color:DarkGray;overflow:hidden;">' + cata[0] + '</dd>' ;
+						'<dt style="float:left; width:40%; background-color:LightGray;overflow:hidden;">Origin</dt>' +
+						'<dd style="padding:0; margin:0; float:left; width:60%; background-color:DarkGray;overflow:hidden;">' + formatText(cata[6]) + '</dd>' ;
+                    label += '</dl> </div>';
+
+				return label;
+			}
 
 			function attachMessage(map, marker, message) {
 
@@ -491,6 +541,8 @@
 	</head>
 	<body onload="initialize()">
 		<div id="map_canvas"><!-- Google Maps --></div>
+		
+		 <!-- Cartouche superieur  -->
 		<div id="panel">
 			<div style="margin:5px;">
 				<div id="panel-f1" style="float:left; margin:2px;"></div>
@@ -525,16 +577,22 @@
 				</div> 
 			</div>
 		</div>
-		<div id="panel_2">
+		
+		<!-- Legende, en bas a droite  -->
+		<div id="panel_2"> 
 			<div style="margin:5px; font-size:xx-small; background-color:yellow">
 				<span style="display:inline-block; vertical-align:middle;">
-					<img src="http://maps.google.com/mapfiles/kml/shapes/placemark_circle_highlight.png" title="Earthquake" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Earthquake">Earthquake&nbsp;&nbsp;
-				</span><!-- NO WHITESPACES
-				--><span style="display:inline-block; vertical-align:middle;"><!-- NO WHITESPACES
-				--><img src="http://maps.google.com/mapfiles/kml/paddle/Q-ugc.png" title="Quarry" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Quarry">Quarry&nbsp;&nbsp; 
+					<img src="http://maps.google.com/mapfiles/kml/shapes/placemark_circle_highlight.png" title="Event" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Event">Event&nbsp;&nbsp;
 				</span><!-- NO WHITESPACES
 				--><span style="display:inline-block; vertical-align:middle;">
-					<img src="http://maps.google.com/mapfiles/kml/shapes/road_shield3.png" title="Station" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Station">Station
+					(SiHex<img src="./logo_quake_natural.png" title="Natural" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Catalog">natural /<!-- NO WHITESPACES
+				--><img src="./logo_quake_artificial.png" title="Artificial" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Catalog">artificial)&nbsp;
+				</span><!-- NO WHITESPACES
+				--><span style="display:inline-block; vertical-align:middle;"><!-- NO WHITESPACES
+				-->&nbsp;<img src="http://maps.google.com/mapfiles/kml/paddle/Q-ugc.png" title="Quarry" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Quarry">Quarry&nbsp;&nbsp; 
+				</span><!-- NO WHITESPACES
+				--><span style="display:inline-block; vertical-align:middle;">
+					<img src="http://maps.google.com/mapfiles/kml/shapes/road_shield3.png" title="Station" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Station">&nbsp;Station
 				</span>
 			</div>
 		</div>
