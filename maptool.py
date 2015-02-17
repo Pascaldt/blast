@@ -48,7 +48,7 @@ def maptool(origin, stations):
     f.close()
 
     # Write inventory array in Javascript 
-    print origin
+    #print origin
     fname = os.path.dirname(os.path.realpath(__file__)) + "/html/stations.js"
     g = open(fname, 'w')
     g.write("var stations = [ // networkCode stationCode lon lat detect\n")
@@ -61,17 +61,15 @@ def maptool(origin, stations):
                   'false',-1.,-1.,-1.)
             
         # write line [netcode stationcode, detectY/N, lon, lat, azim, dist, timeresidual]
-        #g.write('["%s",\t"%s",\t%s,\t%f,%f,%f,%f,%f]\n' \
-        #        %(st['networkCode'],st['stationCode'],detect,) )
         g.write('["%2s","%5s",%10.6f, %10.6f, %6s, %6.2f, %9.4f, %7.4f],\n' % values )
 
-        #g.write('["%s",\t"%s",\t%s]\n'%(st['networkCode'],st['stationCode'],str(st['detect']).lower() )
-        #g.write('\t\tvar lat = %f \n'%inventory["latitude"])
-        #g.write('\t\tvar ncode = %s \n'%inventory["lat"])
-        #g.write('\t\tvar scode = %s \n'%inventory["lon"])
-        #g.write('\t\tvar start = "%s" \n'%inventory["date"])
+      
     g.write("];\n")
     g.close()
+    
+    # Local sismicity
+    import localsismicity
+    localsismicity.localsism()
     pass
     
 def isnight(lat,lng,date,altit=20):

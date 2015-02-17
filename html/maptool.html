@@ -50,7 +50,7 @@
 		<script type="text/javascript" src="./origin.js"></script>
 		<script type="text/javascript" src="./carrieres.js"></script>
 		<script type="text/javascript" src="./stations.js"></script>
-		<script type="text/javascript" src="./Catalogue_SiHex_Mw.js"></script>
+		<script type="text/javascript" src="./localsism.js"></script>
 
 		<script type="text/javascript">
 			function initialize() {
@@ -204,7 +204,7 @@
 				});
 
 				// Catalog quakes
-				createQuakes(map,catalog,llev);
+				createLocSism(map,locsism,llev);
 
 				// setup markers for quarries
 				createCarrieres(map,carrieres);
@@ -214,7 +214,6 @@
 				
 				// draw line to trigged stations
 				linkStations(map, lat, lng, stations);
-
 
 				// Local Day/Night symbol
 				var ficon, ficontitle;
@@ -231,7 +230,6 @@
 					ficontitle = 'undef';
                 }
                                 
-
 				// Preparer cartouche superieur
 				var pfield1 = document.getElementById('panel-f1'); //Write chosen logo to html day/night/noon
 				pfield1.innerHTML = 
@@ -327,23 +325,23 @@
 				}	// end for() carrieres
 			}
 
-			// Quakes catalog near event
-			function createQuakes(map, catalog,llev) {
-				radius2 = Math.pow(0.40,2)
-				if ( catalog.length == 0 ) return;
-				for ( var i=0; i < catalog.length; i++ ) {
+			// Local sismicity markers
+			function createLocSism(map, locsism,llev) {
+				//radius2 = Math.pow(0.40,2)
+				if ( locsism.length == 0 ) return;
+				for ( var i=0; i < locsism.length; i++ ) {
 //				for ( var i=0; i < 1000; i++ ) {
 
 					// lon lat
-					var lng = catalog[i][4];	// longitude
-					var lat = catalog[i][3];	// latitude
+					var lng = locsism[i][4];	// longitude
+					var lat = locsism[i][3];	// latitude
 
                     // Restrict catalog to 0.50 deg radius
-					if (Math.pow(Math.cos(llev.lat()*Math.PI/180)*(lng-llev.lng()),2) + Math.pow(lat-llev.lat(),2)>radius2) continue;
+					//if (Math.pow(Math.cos(llev.lat()*Math.PI/180)*(lng-llev.lng()),2) + Math.pow(lat-llev.lat(),2)>radius2) continue;
 					//var myLatlng = new google.maps.LatLng(lat,lng);
 					
 					// Choose natural/artificial symbole
-	                if (catalog[i][7] == 'ke' || catalog[i][7] == 'se' ||catalog[i][7] == 'ls') 
+	                if (locsism[i][7] == 'ke' || locsism[i][7] == 'se' ||locsism[i][7] == 'ls') 
                     {
                         cata_icon = './logo_quake_natural.png';
                     }else{
@@ -364,7 +362,7 @@
 						},
 					});
 										// Label when clic
-                    label = cataLabel(catalog[i]);
+                    label = cataLabel(locsism[i]);
 					attachMessage(map, marker, label);
 				}
 			} 
@@ -585,7 +583,7 @@
 					<img src="http://maps.google.com/mapfiles/kml/shapes/placemark_circle_highlight.png" title="Event" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Event">Event&nbsp;&nbsp;
 				</span><!-- NO WHITESPACES
 				--><span style="display:inline-block; vertical-align:middle;">
-					(SiHex<img src="./logo_quake_natural.png" title="Natural" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Catalog">natural /<!-- NO WHITESPACES
+					(Sisimicite SiHex<img src="./logo_quake_natural.png" title="Natural" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Catalog">natural /<!-- NO WHITESPACES
 				--><img src="./logo_quake_artificial.png" title="Artificial" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Catalog">artificial)&nbsp;
 				</span><!-- NO WHITESPACES
 				--><span style="display:inline-block; vertical-align:middle;"><!-- NO WHITESPACES
