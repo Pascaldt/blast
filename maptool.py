@@ -68,8 +68,8 @@ def maptool(origin, stations):
     g.close()
     
     # Local sismicity
-    import localsismicity
-    localsismicity.localsism()
+    import plot_sismicity
+    plot_sismicity.plot_sismicity()
     pass
     
 def isnight(lat,lng,date,altit=20):

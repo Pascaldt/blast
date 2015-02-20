@@ -1,0 +1,22 @@
+Général:
+- Pas de roches massives en activité au nord de y=2592880 ?
+
+- Est-il possible d'avoir un indicateur précisant si les coordonnées concernent la carrière ou la commune
+- En cas de release, les coordonnées lon-lat WGS84 seraient plus pratiques.
+- J'essaie actuellement de trier entre substances avec/sans explosifs. Je vous en ferai part.  
+
+Cas particuliers:
+- Ligne 950. Contient un ";" dans l'adresse. Adresse incomplète
+"BESSAC SA (182.004)";"La Rouquié ; Rocher de Richard et ";"81";"81360";"MONTREDON LABESSONNIE";"81182";598766;1858675;"CORNEENNES"
+
+- Ligne 951. Contient un ";" dans l'adresse. 
+"Carrières Peyrebrune La Rouquié 182.001";"Peyrebrune (lieux-dits Puech Caillol ;  ";"81";"81360";"MONTREDON LABESSONNIE";"81182";594051;1862435;"DIORITES"
+
+- Ligne 778. Pb de coordonnées métropolitaines
+"LGO MARAICHERES";"LES MARAICHERES";"44";"44340";"BOUGUENAIS";"44020";300116;2247931;"GNEISS"
+
+- Ligne 1550. Pb de coordonnées métropolitaines
+"CLARIANT PRODUCTION  (Ex SFBD)";"Thévenon Lachaud";"42";"42600";"GREZIEUX LE FROMENTAL";"42105";7906583;6502801;"ARGILE"
+
+- Lignes 1627,1628, 1629, 1637, 1638, 1639, 1640. Problème de coordonnées Dom-Tom.
+- Lignes 1622, 1623, 1625, 1626, 1630, 1631, 1632, 1633, 1634. Pb coordonnées Dom-Tom, vues dans le sahara.
