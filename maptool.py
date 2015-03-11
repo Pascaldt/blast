@@ -6,10 +6,17 @@ Created on Thu Jun 19 16:08:42 2014
 @author: pascal
 """
 def maptool(origin, stations):
-   # Map the xml event to a satellite map view with overlayed quarries
-    #import shutil            # File copy utilities 
+   # Map the xml event to a map view with overlayed infos
     import os
     
+    #import xmlev
+    #origin = xmlev.origin(plot_sismicity.cfg['file']['origin'])
+    #local = plot_sismicity.get_local(origin)
+    #print local
+    #plot_sismicity.writejs(local)
+    
+    #plot_sismicity.plotpolar(origin,local)
+
     # Day/Night/Lunch
     try: 
         if isnight(origin["lat"],origin["lon"],origin["date"]):
@@ -33,6 +40,7 @@ def maptool(origin, stations):
 
     # Write origin record in Javascript 
     fname = os.path.dirname(os.path.realpath(__file__)) + "/html/origin.js"
+    print "**",__file__
     f = open(fname, 'w')
     f.write("// Event-dependent variables\n")
     f.write('\t\tvar lat = %f \n'%origin["lat"])
@@ -69,8 +77,9 @@ def maptool(origin, stations):
     
     # Local sismicity
     import plot_sismicity
-    plot_sismicity.plot_sismicity()
-    pass
+    local = plot_sismicity.get_local(origin)
+    plot_sismicity.plotpolar(origin,local)
+
     
 def isnight(lat,lng,date,altit=20):
 # Returns : 1-night, 0-day
@@ -113,9 +122,6 @@ def isnight(lat,lng,date,altit=20):
 ############################################################
 
 if __name__ == "__main__":
-
-    import os
-    print os.path.dirname(os.path.realpath(__file__))
 
 #    lng =  0.3665         # Degree East
 #    lat = 43.0591         
