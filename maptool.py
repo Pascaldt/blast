@@ -6,17 +6,11 @@ Created on Thu Jun 19 16:08:42 2014
 @author: pascal
 """
 def maptool(origin, stations):
-   # Map the xml event to a map view with overlayed infos
+   # Launch map visu and sismicity plots
     import os
-    
-    #import xmlev
-    #origin = xmlev.origin(plot_sismicity.cfg['file']['origin'])
-    #local = plot_sismicity.get_local(origin)
-    #print local
-    #plot_sismicity.writejs(local)
-    
-    #plot_sismicity.plotpolar(origin,local)
-
+    import bltools
+    cfg=bltools.get_config()
+      
     # Day/Night/Lunch
     try: 
         if isnight(origin["lat"],origin["lon"],origin["date"]):
@@ -33,14 +27,12 @@ def maptool(origin, stations):
     if '11:45' <= hm <= '13:15':
         origin["yesnight"] = 'Lunch'
     
-
     # Day of the week
     from datetime import datetime
     origin["dayname"]=datetime.strptime(origin["date"],"%Y-%m-%dT%H:%M:%S.%fZ").strftime("%a")
 
-    # Write origin record in Javascript 
+    # Write  origin 
     fname = os.path.dirname(os.path.realpath(__file__)) + "/html/origin.js"
-    print "**",__file__
     f = open(fname, 'w')
     f.write("// Event-dependent variables\n")
     f.write('\t\tvar lat = %f \n'%origin["lat"])
@@ -55,9 +47,9 @@ def maptool(origin, stations):
     f.write('\t\tvar idorg= "%s" \n'%origin["idorg"])
     f.close()
 
-    # Write inventory array in Javascript 
+    # Write javascript inventory array 
     #print origin
-    fname = os.path.dirname(os.path.realpath(__file__)) + "/html/stations.js"
+    fname = cfg['file']['jsstations']
     g = open(fname, 'w')
     g.write("var stations = [ // networkCode stationCode lon lat detect\n")
     for st in stations:
@@ -70,15 +62,22 @@ def maptool(origin, stations):
             
         # write line [netcode stationcode, detectY/N, lon, lat, azim, dist, timeresidual]
         g.write('["%2s","%5s",%10.6f, %10.6f, %6s, %6.2f, %9.4f, %7.4f],\n' % values )
-
-      
+     
     g.write("];\n")
     g.close()
     
-    # Local sismicity
-    import plot_sismicity
-    local = plot_sismicity.get_local(origin)
-    plot_sismicity.plotpolar(origin,local)
+    # Write js seismic history 
+    import blhistory
+    local = blhistory.get_local(origin)
+    blhistory.writejs(local)    
+    
+    # Display the map
+    import webbrowser
+    webbrowser.open(cfg['file']['htmlmaptool'],new=0, autoraise=True)
+
+    # Plot sismicity historic
+
+    blhistory.plotpolar(origin,local)
 
     
 def isnight(lat,lng,date,altit=20):
@@ -129,10 +128,10 @@ if __name__ == "__main__":
 #    dlng=  8.39             # Kilometers
 #    dlat= 16.49
     
-    import xmlev
-    origin = xmlev.origin('orginfo.xml')     
-    inventory = xmlev.inventory('orginfo_inventory.xml')    
-    stations = xmlev.stations('orginfo.xml',inventory)    
+    import bltools
+    origin = bltools.origin('orginfo.xml')     
+    inventory = bltools.inventory('orginfo_inventory.xml')    
+    stations = bltools.stations('orginfo.xml',inventory)    
     maptool(origin, stations)
     
     

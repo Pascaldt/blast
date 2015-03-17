@@ -5,24 +5,9 @@
 #
 
 import numpy as np
+import bltools
+cfg=bltools.get_config()    
 
-
-def get_config():
-# Get config    
-    import ConfigParser
-    cfg = ConfigParser.ConfigParser()
-    import os
-    BLAST_DIR = os.path.dirname(os.path.realpath(__file__)) + "/"
-    cfg.read(BLAST_DIR+"blast.cfg")    
-        
-    cfgp=dict()
-    cfgp['dir'] = BLAST_DIR
-    cfgp['file']=dict((x,BLAST_DIR+y) for x,y in cfg.items('Files'))
-    cfgp['param']=dict((x,float(y)) for x,y in cfg.items('Params'))
-    return cfgp
-
-cfg=get_config()
-    
 def get_local(origin):
     # Read catalog
     cata = np.genfromtxt(cfg['file']['catalog'] \
@@ -40,14 +25,12 @@ def get_local(origin):
     local= [dict(zip(x.dtype.names,x)) for x  in cata[iok]]
     for i in xrange(len(local)):
         local[i]['dist']=d[i]    
-    return (local)
-    #return (local,d)
+    return local
 
-    #print local
 
 def writejs(local):
       
-    fileout = cfg['file']['maptool_locsism']
+    fileout = cfg['file']['jshistory']
     # Write javascript array for maptool
     # -----------------------------------
     fout = open(fileout,'wb')
@@ -64,14 +47,6 @@ def plotpolar(origin,local):
 
     #%% Compute origin's parameters
     from datetime import datetime
-    #import pytz
-    #local_tz = pytz.timezone('Europe/Paris')
-     # Effacer la fig si pb      
-    #if not local:
-    #    local = origin
-#        plt.close()
-#        print "*** Problem parsing local event, no history available"
-#        return
    
     #  Quakes time, normalised in [0,1]*day, and fractional year
     timestamp = [datetime.strptime(x['date'] + 'T' + x['time'],"%Y/%m/%dT%H:%M:%S.%f") for x in local] # datetime structure
@@ -92,15 +67,18 @@ def plotpolar(origin,local):
     
     #  Graphic common frame
     from matplotlib import pyplot as plt
-
-    tit = 'Neighbor History (SiHex)'
+    #tit = " Local History (SiHex) "
+    tit=2
+    tit2 = "(utc)%s,  (lon)%-8.4f,  (lat)%-8.4f" % (origin['date'],origin['lon'],origin['lat'])
+    #tit = 'Local History (SiHex) of ' + origin['date'] + ' (utc) lon ' + str(origin['lon']) + ' lat ' + str(origin['lat'])
     if tit not in plt.get_figlabels():     # Create figure or make current
         fig=plt.figure(num=tit, figsize=(12, 5), facecolor='none') # create
     else:
         fig=plt.figure(tit)                                # activate
         plt.clf()
+        plt.cla()
 
-        
+    #plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.1)    
     def Mwsurf(m):
         if not hasattr(m,'__iter__'): m = [m] # make singleton iterable
         return [20*(max(x,1.5))**2 for x in m]
@@ -108,6 +86,8 @@ def plotpolar(origin,local):
         
     #%%  === Plot 1 : Radial Date ===   
     # Prepare data
+    plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.15)    
+    fig.suptitle(tit2,weight='bold',y=0.03,verticalalignment = 'bottom')
     theta = 2*np.pi*np.array(frac_hour)
     colors=['r' if x['type'] in ('ke','se','ls') else 'b' for x in local] # red for natural, blue otherwise
     area = Mwsurf([x['Mw'] for x in local])
@@ -123,23 +103,27 @@ def plotpolar(origin,local):
     inner=[3000-x for x in frac_year]         # Substitute radial labels for descending years
                                              # leaving inner disc empty  
     plt.scatter(theta, inner,s=area,c=colors,alpha=.5,edgecolors='k',linewidth=1,zorder=2) # Plot catalog
-    plt.scatter(theta[-1], inner[-1],s=areaorg,facecolors='k',edgecolors='k',zorder=2) # Overplot origin
+    plt.scatter(theta[-1], inner[-1],s=areaorg,facecolors='w',linewidth=4,edgecolors='r',zorder=3) # Overplot origin
 
     #  Time angular axis
-    labelsy =  ['Year\n 0h', '','2h','','4h','','6h','','8h','','10h','','12h','','14h','','16h','','18h','','20h','','22h',''] # Subtitude labels
+    labelsy =  ['Time\n 0h', '','2h','','4h','','6h','','8h','','10h','','12h','','14h','','16h','','18h','','20h','','22h',''] # Subtitude labels
     spoke_angles=[0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 225, 240, 255, 270, 285, 300, 315, 330, 345]
-    (g_lines, g_labels)  = ax.set_thetagrids(spoke_angles, labelsy,zorder=3)
-    
+    (g_lines, g_labels)  = ax.set_thetagrids(spoke_angles, labelsy,weight='bold')
     #  Year radial axis
-    ax.set_ylim(min(inner),max(inner)+0.1*(max(inner)-min(inner)))
-    val=list(ax.get_yticks())
-    label = ['%4.0f' % (3000-x) for x in val]
     innerrat = .3                            # let 30% empty center
-    infbound = max(val) - (max(val)-min(val))/(1-innerrat)
-    val.insert(0,infbound)                   # Related bound
-    label.insert(0,'')
-    plt.rgrids(val, label, weight='bold')                   # Labels    
-    
+    infbound = max(inner) - (max(inner)-min(inner))/(1-innerrat)
+    #   convert labels of internal scale to ascii years
+    ax.set_ylim(infbound,max(inner)+0.1*(max(inner)-min(inner)))
+    val=list(ax.get_yticks())
+    label=[]
+    for x in val:
+        if x >= min(inner):
+            label.append('%4.0f' % (3000-x))
+        else:
+            label.append(' ')
+    plt.rgrids(val, label, angle=40,weight='bold')                   # Labels    
+    cntr = ax.axis()[2]      # aiguille
+    plt.plot([0,theta[-1]],[cntr,inner[-1]],linewidth=1,c='k')   
     
     #%%  === Plot 2 : Radial Distance ===  
     
@@ -147,9 +131,9 @@ def plotpolar(origin,local):
                                              # leaving inner 30% empty disc
     # Prepare legend
     ax2 = plt.subplot(122, polar=True)       # Polar view
-    p1=plt.scatter(theta[-1], dist[-1],s=aref[0],facecolors='k',edgecolors='k',linewidth=2)
-    p2=plt.scatter(theta[-1], dist[-1],s=aref[0],c='r',alpha=.5,edgecolors='k',linewidth=2)
-    p3=plt.scatter(theta[-1], dist[-1],s=aref[0],c='b',alpha=.5,edgecolors='k',linewidth=2)
+    p1=plt.scatter(theta[-1], dist[-1],s=aref[0],facecolors='w',edgecolors='r',linewidth=4)
+    p2=plt.scatter(theta[-1], dist[-1],s=aref[0],c='r',alpha=.5,edgecolors='k',linewidth=1)
+    p3=plt.scatter(theta[-1], dist[-1],s=aref[0],c='b',alpha=.5,edgecolors='k',linewidth=1)
     p4=plt.scatter(theta[-1], dist[-1],s=aref[0],facecolors='none',edgecolors='k',linewidth=1)
     p5=plt.scatter(theta[-1], dist[-1],s=aref[1],facecolors='none',edgecolors='k',linewidth=1)
     p6=plt.scatter(theta[-1], dist[-1],s=aref[2],facecolors='none',edgecolors='k',linewidth=1)
@@ -167,7 +151,7 @@ def plotpolar(origin,local):
     
     # Plot
     plt.scatter(theta, dist,s=area,c=colors,alpha=.5,edgecolors='k',linewidth=1)
-    plt.scatter(theta[-1], dist[-1],s=areaorg,facecolors='k',edgecolors='k',linewidth=2)
+    plt.scatter(theta[-1], dist[-1],s=areaorg,facecolors='w',linewidth=4,edgecolors='r',zorder=3)
     
     fig.legend((p1,p2,p3,p4,p5,p6),('Origin','Natural','Artificial','Mw <1,5','  2','  2,5'),'upper right',scatterpoints=1,prop={'size':10})
     # Custom radial grid
@@ -175,28 +159,33 @@ def plotpolar(origin,local):
     lab2 = ['%i' % x for x in val]
     val.insert(0,0.001)
     lab2.insert(0,'0')
-    plt.rgrids(val, lab2, weight='bold')
+    lab2[-1]+='km'
+    plt.rgrids(val, lab2, angle=45, weight='bold')
     
+    cntr = ax2.axis()[2]      # aiguille
+    plt.plot([0,theta[-1]],[cntr,dist[-1]],linewidth=1,c='k')   
     #  Time angular axis
-    labelsd =  ['Distance (km)\n 0h', '','2h','','4h','','6h','','8h','','10h','','12h','','14h','','16h','','18h','','20h','','22h',''] # Subtitude labels
+    labelsd =  ['Distance\n 0h', '','2h','','4h','','6h','','8h','','10h','','12h','','14h','','16h','','18h','','20h','','22h',''] # Subtitude labels
 
-    (g_lines, g_labels)  = ax2.set_thetagrids(spoke_angles, labelsd)
+    (g_lines, g_labels)  = ax2.set_thetagrids(spoke_angles, labelsd, weight='bold')
     plt.draw()
+    plt.show()
+
+    #plt.show()
     
 #fig.savefig('circum.png')
 #%%    
 if __name__ == "__main__":
-    #aa=get_config()
-    #print aa
-    cfg=get_config()
-    import xmlev
-    origin = xmlev.origin(cfg['file']['origin'])
+    import bltools
+    
+    cfg = bltools.get_config()    
+    origin = bltools.origin(cfg['file']['origin'])
     local = get_local(origin)
     #print local
     writejs(local)
     
     plotpolar(origin,local)
-    
+    #plt.show()
     #localsism()
     #print "sihex2js inputsihexname outputfilejs"    
     #print "  convert sihex sismo catalog (fixed space columns) to js variable" 
