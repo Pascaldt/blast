@@ -50,16 +50,14 @@
 		<script type="text/javascript" src="./origin.js"></script>
 		<script type="text/javascript" src="./carrieres.js"></script>
 		<script type="text/javascript" src="./stations.js"></script>
-		<script type="text/javascript" src="./localsism.js"></script>
+		<script type="text/javascript" src="./quakes.js"></script>
 
 		<script type="text/javascript">
 			function initialize() {
 
-				// --   Section 3: Fixed Javascript footer, copy of maptool_footer.txt  --
 				var llev = new google.maps.LatLng(lat, lng);
 				var llmap = llev;
 				var colorev = "red";
-				var colorreticule = "Gold";
 
 				// Centered map
 				var map = new google.maps.Map(document.getElementById("map_canvas"), {
@@ -73,19 +71,19 @@
 					}
 				});
 
-				// 
+				// Grid coordinates
 				grid = new Graticule(map, false);
 
-				// Event's thick crown
+				// Event
 				var marker = new google.maps.Marker({
 					position : llev,
 					icon : {
-						url : "http://maps.google.com/mapfiles/kml/shapes/placemark_circle_highlight.png",
+						url : "./logo_placemark_circle_highlight.png",
 						size : new google.maps.Size(32, 32),
-						scaledSize : new google.maps.Size(32, 32),
+						scaledSize : new google.maps.Size(20, 20),
 						origin : new google.maps.Point(0, 0),
-                                     zIndex: 5,
-						anchor : new google.maps.Point(32/2 -1, 32/2)
+                        zIndex: 1, // Useless because in lower layer than markers
+						anchor : new google.maps.Point(20/2 -1, 20/2)
 					},
 					map : map
 				});
@@ -106,161 +104,88 @@
 					bounds : new google.maps.LatLngBounds(sw, ne)
 				});
 
-				// Concentric Reticle
-				// Concentric
-				for (var i = 0; i <= 20; i++) {// Concentric circles
-					var thick = 0.3 + 0.6 * (i % 5 == 0) + 1.1 * (i % 10 == 0);
-					var ev = new google.maps.Circle({
-						center : llev,
-						radius : i * 1000,
-						strokeWeight : thick,
-						strokeColor : colorreticule,
-						strokeOpacity : 0.8,
-						fillOpacity : 0.00,
-						map : map
-					});
-				}
 
-				// Cross
-				// H bars coords
-				var r = 6378137;	// Earth radius (m) for google maps
-				var inner = 1000 / r * (Math.PI / 180);	// Internal 1km diameter (deg)
-				var lenkm = 22e3;
-				var h1r = lenkm / (r * (Math.cos(lat * Math.PI / 180)));	// Longitude begin-end offsets
-				var h2r = 1000 / (r * (Math.cos(lat * Math.PI / 180)));
-				var h1 = h1r * 180 / Math.PI;	// Big (degree)
-				var h2 = h2r * 180 / Math.PI;	// Little
+				// Markers quakes, quarries, stations
+				drawReticle(map,llev);
+				createQuake(map,quake,llev);
+				createQuarry(map,carrieres);
+				createStation(map,stations);
+				linkStation(map, lat, lng, stations); // Detecting stations
 
-				// V bars coords
-				var v1r = lenkm / r;	// Latitude begin-end offsets
-				var v2r = 1000 / r;
-				var v1 = v1r * 180 / Math.PI;	// Big
-				var v2 = v2r * 180 / Math.PI;	// Little
-
-				// Draw cross
-				var Cross = [
-					new google.maps.LatLng(lat, lng - h2), 
-					new google.maps.LatLng(lat, lng - h2 - h1), 
-					new google.maps.LatLng(lat, lng + h2), 
-					new google.maps.LatLng(lat, lng + h2 + h1), 
-					new google.maps.LatLng(lat - v1 - v2, lng), 
-					new google.maps.LatLng(lat - v2, lng), 
-					new google.maps.LatLng(lat + v1 + v2, lng), 
-					new google.maps.LatLng(lat + v2, lng)
-				];
-
-				for (var i = 0; i < 4; i++) {
-					var Path = new google.maps.Polyline({
-						path : [ Cross[2 * i], Cross[2 * i + 1] ],
-						strokeColor : colorreticule,
-						strokeOpacity : 0.8,
-						strokeWeight : 1,
-						map : map
-					});
-				}
-
-				// Reticle distances labels
-				var Distances = [5, 10, 20];
-				var ibLabels = [];
-
-				for (var i = 0; i < Distances.length; i++) {
-
-					var label = Distances[i] + "&nbsp;km";
-					var distance = Distances[i] * 1000;
-
-					var ibLabel = new InfoBox({
-						content : label,
-						boxStyle : {
-							border : "0px",
-							//border: "1px solid black",
-							textAlign : "center",
-							fontSize : "6pt",
-							width : "26px",
-							background : colorreticule
-						},
-						disableAutoPan : true,
-						pixelOffset : new google.maps.Size(-26 / 2, 0),
-						position : google.maps.geometry.spherical.computeOffset(llev, distance, 0),
-						closeBoxURL : "",
-						isHidden : false,
-						pane : "mapPane",
-						enableEventPropagation : true
-					});
-					ibLabel.open(map);
-
-					ibLabels[i] = ibLabel;
-				}
-
-				google.maps.event.addListener(map, 'zoom_changed', function() {
-					zoomLevel = map.getZoom();
-					if (zoomLevel >= 9) {
-						for (var i = 0; i < ibLabels.length; i++) {
-							ibLabels[i].setVisible(true);
-						}
-					} else {
-						for (var i = 0; i < ibLabels.length; i++) {
-							ibLabels[i].setVisible(false);
-						}
-					}
-				});
-
-				// Catalog quakes
-				createLocSism(map,locsism,llev);
-
-				// setup markers for quarries
-				createCarrieres(map,carrieres);
-
-				// setup markers for quarries
-				createStations(map,stations);
-				
-				// draw line to trigged stations
-				linkStations(map, lat, lng, stations);
-
+				// Preparer cartouche superieur
+				var pfield2 = document.getElementById('panel-f2'); // UTC
+				pfield2.innerHTML = '<i>' + String(date.substring(0,10)) + '&nbsp;' + String(date.substring(11,19)) + '(UTC)</i>';
+//				var pfield3 = document.getElementById('panel-f3'); // Local time
+//				pfield3.innerHTML = '<b>' + weekday + ", " + String(loctime) + "</b>";
 				// Local Day/Night symbol
 				var ficon, ficontitle;
-
                 ficontitle = isnight;
-				if (ficontitle == "Jour") {
+				if (ficontitle == "Nuit") 
+				{
+					ficon = './logo_moon.png';
+				} else 
+				{
 					ficon = './logo_daytime.png';
-				} else if (ficontitle == "Nuit") {
-					ficon = './logo_sleepmoon.gif';
-				} else if (ficontitle == "Lunch") {
-					ficon = './logo_sandwich.png';
-				} else {
-					ficon = './logo_void.gif';
-					ficontitle = 'undef';
-                }
-                                
-				// Preparer cartouche superieur
-				var pfield1 = document.getElementById('panel-f1'); //Write chosen logo to html day/night/noon
-				pfield1.innerHTML = 
-					'<img src="' + ficon + '" title="' + ficontitle + '" style="border-width:0px;" alt="' + ficontitle + '"/>' +
-					'<br><span style="font-size:xx-small;">' + ficontitle + '<\/span>';
-
-				var pfield2 = document.getElementById('panel-f2'); // Date
-				pfield2.innerHTML = ":&nbsp;" + String(date);
-
+				}
 				var pfield3 = document.getElementById('panel-f3'); // Local time
-				pfield3.innerHTML = weekday + ", " + String(loctime) + " French time";
-
+				pfield3.innerHTML = '<img src="' + ficon + '"  style="height:18px;vertical-align:middle;"/>' + '   <b>' + weekday + ", " + String(loctime) + "</b>" ;
 				var pfield4 = document.getElementById('panel-f4'); // Lon
-				pfield4.innerHTML = String(lng.toFixed(5));
-
+				pfield4.innerHTML = String(lng.toFixed(3));
 				var pfield5 = document.getElementById('panel-f5'); // Lat
-				pfield5.innerHTML = String(lat.toFixed(5));
-
+				pfield5.innerHTML = String(lat.toFixed(3));
 				var pfield6 = document.getElementById('panel-f6'); // Event
-				pfield6.innerHTML = ":&nbsp;" + String(idev);
-
+				pfield6.innerHTML = "&nbsp;&nbsp;&nbsp;<i>EventID</i>:&nbsp;" + String(idev);
 				var pfield7 = document.getElementById('panel-f7'); // Origin
-				pfield7.innerHTML = ":&nbsp;" + String(idorg);
-
+				pfield7.innerHTML = "&nbsp;&nbsp;&nbsp;" + String(idorg);
 			} // End initialize
 
-			function createCarrieres(map, carrieres) {
+			// Local sismicity markers
+			function createQuake(map, quake,llev) {				                  				
+				if ( quake.length == 0 ) return;
+				for ( var i=0; i < quake.length; i++ ) {
+					// lon lat
+					var lng = quake[i][4];	// longitude
+					var lat = quake[i][3];	// latitude
+					var Mw  = quake[i][8];  // Magnitude, 0->missing
 
+					// Choose natural/artificial symbol
+	                if (quake[i][7] == 'ke' || quake[i][7] == 'se' ||quake[i][7] == 'ls'){ 
+                        if (Mw > 0)
+                            cata_icon = './logo_quakeMw.png';
+                        else
+                            cata_icon = './logo_quake.png';
+                    }else{
+                        if (Mw > 0)
+                            cata_icon = './logo_blastMw.png';
+                        else
+                            cata_icon = './logo_blast.png';
+                    }
+                    
+                   // Sizing according magnitude when available
+                    if (Mw > 0)
+                        sz = 10*(Math.max(Mw,1)-0.5); 
+                    else
+                        sz = 14; // Default when no magnitude
+                                          
+			      	var marker = new google.maps.Marker({
+					map: map,
+					position: {lat:lat,lng:lng},
+                    icon : {
+                        url : cata_icon,
+     					scaledSize : new google.maps.Size(sz, sz),
+	    				anchor : new google.maps.Point(16, 14)
+		    			},
+                   	zIndex: 50 - Math.round(10*Mw), // Smaller quake stacked on bigger 
+					});
+										// Label when clic
+                    label = cataLabel(quake[i]);
+					attachMessage(map, marker, label);
+				}
+			} 
+
+			function createQuarry(map, carrieres) {
 				var image = {
-					url: "http://maps.google.com/mapfiles/kml/paddle/Q-ugc.png",
+					url: "./logo_Q-ugc.png",
 					// This marker is 64 pixels wide by 64 pixels tall.
 					size: new google.maps.Size(32, 32),
 					// The origin for this image is 0,0.
@@ -268,7 +193,7 @@
 					// The anchor for this image is the base of the flagpole at 0,32.
 					//anchor: new google.maps.Point(0, 32)	// ?
 					//
-					scaledSize: new google.maps.Size(32, 32)
+					scaledSize: new google.maps.Size(17, 23)
 				};
 
 				// clickable region of the icon (a polygon as a series of X,Y points)
@@ -289,17 +214,17 @@
 
 					var myLatlng = new google.maps.LatLng(lat,lng);
 
-					var marker = new google.maps.Marker({
+					var marker = new google.maps.Marker({ // Quarry marker
 						map: map,
 						position: myLatlng,
 						title: markTitle,
 						icon: image,
 						shape: shape,
-						zIndex: i+1
+						zIndex: 51
 						//others: ?
 					});
 
-					var contentString = 
+					var contentString = // Quarry label
 						'<div style="width:500px; height:180px;">' +
 						'<dl style="overflow:hidden;">' +
 						'<dt style="float:left; width:20%; background-color:DarkGray;">nom</dt>' +
@@ -326,50 +251,11 @@
 				}	// end for() carrieres
 			}
 
-			// Local sismicity markers
-			function createLocSism(map, locsism,llev) {
-				//radius2 = Math.pow(0.40,2)
-				if ( locsism.length == 0 ) return;
-				for ( var i=0; i < locsism.length; i++ ) {
-//				for ( var i=0; i < 1000; i++ ) {
-
-					// lon lat
-					var lng = locsism[i][4];	// longitude
-					var lat = locsism[i][3];	// latitude
-					
-					// Choose natural/artificial symbole
-	                  if (locsism[i][7] == 'ke' || locsism[i][7] == 'se' ||locsism[i][7] == 'ls') 
-                        {
-                          cata_icon = './logo_quake_natural.png';
-                        }else{
-                          cata_icon = './logo_quake_artificial.png';
-                        }
-    
-			      var marker = new google.maps.Marker({
-					map: map,
-//					position: myLatlng,
-					position: {lat:lat,lng:lng},
-					//title: markTitle,
-                               icon : {
-            	                   url : cata_icon,
-					//size : new google.maps.Size(16, 16),
-					scaledSize : new google.maps.Size(16, 16),
-					//origin : new google.maps.Point(0, 0),
-                              	zIndex: 0,
-					anchor : new google.maps.Point(16, 14)
-						},
-					});
-										// Label when clic
-                    label = cataLabel(locsism[i]);
-					attachMessage(map, marker, label);
-				}
-			} 
-
-			function createStations(map, stations) {
+			function createStation(map, stations) {
 				if ( stations.length == 0 ) return;
 
 				var image = {
-					url: "http://maps.google.com/mapfiles/kml/shapes/road_shield3.png",
+					url: "./logo_road_shield3.png",
 					// This marker is 64 pixels wide by 64 pixels tall.
 					size: new google.maps.Size(16, 16),
 					// The origin for this image is 0,0.
@@ -390,9 +276,6 @@
 
                 // Stations layer
 				for ( var i=0; i < stations.length; i++ ) {
-
-					// var station = stations[i];
-
 					var markTitle = "S-" + (i+1);
 					
 					// lon lat
@@ -406,15 +289,13 @@
 						title: markTitle,
 						icon: image,
 						shape: shape,
-						zIndex: i+1
-						//others: ?
+						zIndex: 50
 					});
 					
 					// Label when clic
                     label = stationLabel(stations[i]);
 					attachMessage(map, marker, label);
 				}	// end for() stations
-
 			}
 
         // Stations label
@@ -506,18 +387,13 @@
 			}
 
 			function formatText(str) {
-
 				str = ( str != null ? str.trim() : "" );
-
 				if ( str.length == 0 ) str = "&nbsp;";
-
 				return str;
 			}
 			
-			
-			
 			// Tie trigged stations to origin
-			function linkStations(map, lat, lon, stations) {
+			function linkStation(map, lat, lon, stations) {
 				if ( stations.length == 0 ) return;
 				
 				for (var i = 0; i<stations.length; i++){
@@ -527,10 +403,105 @@
     					strokeColor: "#FFFFFF",
     					//strokeOpacity: 1.0,
     					strokeWeight: 1,
+    					zIndex: 1, // Useless because in a lower layer than markers
     					map: map
 					});
 				}
 				
+			}
+			
+			function drawReticle(map,llev) {
+				// Concentric reticle
+				var colorreticule = "Gold";
+				for (var i = 0; i <= 20; i++) {// Concentric circles
+					var thick = 0.3 + 0.6 * (i % 5 == 0) + 1.1 * (i % 10 == 0);
+					var ev = new google.maps.Circle({
+						center : llev,
+						radius : i * 1000,
+						strokeWeight : thick,
+						strokeColor : colorreticule,
+						strokeOpacity : 0.8,
+						fillOpacity : 0.00,
+						map : map
+					});
+				}
+
+				// Cross reticle
+				//   H bars 
+				var r = 6378137;	// Earth radius (m) for google maps
+				var inner = 1000 / r * (Math.PI / 180);	// Internal 1km diameter (deg)
+				var lenkm = 22e3;
+				var h1r = lenkm / (r * (Math.cos(lat * Math.PI / 180)));	// Longitude begin-end offsets
+				var h2r = 1000 / (r * (Math.cos(lat * Math.PI / 180)));
+				var h1 = h1r * 180 / Math.PI;	// Big (degree)
+				var h2 = h2r * 180 / Math.PI;	// Little
+
+				//   V bars 
+				var v1r = lenkm / r;	// Latitude begin-end offsets
+				var v2r = 1000 / r;
+				var v1 = v1r * 180 / Math.PI;	// Big
+				var v2 = v2r * 180 / Math.PI;	// Little
+
+				//   Draw it
+				var Cross = [
+					new google.maps.LatLng(lat, lng - h2), 
+					new google.maps.LatLng(lat, lng - h2 - h1), 
+					new google.maps.LatLng(lat, lng + h2), 
+					new google.maps.LatLng(lat, lng + h2 + h1), 
+					new google.maps.LatLng(lat - v1 - v2, lng), 
+					new google.maps.LatLng(lat - v2, lng), 
+					new google.maps.LatLng(lat + v1 + v2, lng), 
+					new google.maps.LatLng(lat + v2, lng)
+				];
+				for (var i = 0; i < 4; i++) {
+					var Path = new google.maps.Polyline({
+						path : [ Cross[2 * i], Cross[2 * i + 1] ],
+						strokeColor : colorreticule,
+						strokeOpacity : 0.8,
+						strokeWeight : 1,
+						map : map
+					});
+				}
+
+				//   Inner circles
+				var Distances = [5, 10, 20];
+				var ibLabels = [];
+				for (var i = 0; i < Distances.length; i++) {
+					var label = Distances[i] + "&nbsp;km";
+					var distance = Distances[i] * 1000;
+					var ibLabel = new InfoBox({ // km label
+						content : label,
+						boxStyle : {
+							border : "0px",
+							textAlign : "center",
+							fontSize : "6pt",
+							width : "26px",
+							background : colorreticule
+						},
+						disableAutoPan : true,
+						pixelOffset : new google.maps.Size(-26 / 2, 0),
+						position : google.maps.geometry.spherical.computeOffset(llev, distance, 0),
+						closeBoxURL : "",
+						isHidden : false,
+						pane : "mapPane",
+						enableEventPropagation : true
+					});
+					ibLabel.open(map);
+					ibLabels[i] = ibLabel;
+				}
+
+				google.maps.event.addListener(map, 'zoom_changed', function() {
+					zoomLevel = map.getZoom();
+					if (zoomLevel >= 9) {
+						for (var i = 0; i < ibLabels.length; i++) {
+							ibLabels[i].setVisible(true);
+						}
+					} else {
+						for (var i = 0; i < ibLabels.length; i++) {
+							ibLabels[i].setVisible(false);
+						}
+					}
+				});
 			}
 			
 		</script>
@@ -541,20 +512,13 @@
 		 <!-- Cartouche superieur  -->
 		<div id="panel">
 			<div style="margin:5px;">
-				<div id="panel-f1" style="float:left; margin:2px;"></div>
-				<div style="float:left;margin-left:7px;"> <!-- Titres Date/Local time  -->
-					<span style="width:100%; float:right; text-align:right; font-style: italic;">UTC</span>
-					
-				</div> 
 				<div style="float:left;"> <!-- Date/Local time valeurs -->
-					<span id="panel-f2" style="background-color:DarkSeaGreen;"><!-- + date + &nbsp;UTC--></span><!-- NO WHITESPACES
-					--><br><span style="float:left;margin-left:10px;">(</span><!-- NO WHITESPACES
-					--><span id="panel-f3" style="background-color:DarkSeaGreen;font-style: italic;"><!-- + local time + --></span><!-- NO WHITESPACES
-					--><span>)</span>
+					<span id="panel-f3" style="background-color:DarkSeaGreen;"><!-- + local time + --></span><!-- NO WHITESPACES
+					--><br><span id="panel-f2" style="background-color:DarkSeaGreen;"><!-- + date + &nbsp;UTC--></span>
 				</div>
 				<div style="float:left; margin-left:10px;"> <!-- Titres Lon/Lat time  -->
-					<span style="floatnone; text-align:left; font-style: italic;">Lon</span><!-- NO WHITESPACES
-					--><br><span style="floatnone; text-align:right; font-style: italic;">Lat</span>
+					<span style="floatnone; text-align:left; font-style: italic;">&nbsp; &nbsp; Lon</span><!-- NO WHITESPACES
+					--><br><span style="floatnone; text-align:right; font-style: italic;">&nbsp; &nbsp; Lat</span>
 				</div>
 				<div style="float:left;"> <!-- Lon/Lat time separateurs -->
 					:&nbsp;<br>:&nbsp;
@@ -563,10 +527,6 @@
 					<span id="panel-f4" style="width:100%; float:right; text-align:right; background-color:DarkSeaGreen;"><!-- + lng.toFixed(5) + --></span>
 					<br><span id="panel-f5" style="width:100%; float:right; text-align:right; background-color:DarkSeaGreen;"><!-- + lat.toFixed(5) + --></span>
 				</div>
-				<div style="float:left; margin-left:10px;"> <!-- Titres event/origin  -->
-					<span style="width:100%; float:right; text-align:right; font-style: italic;">Event</span>
-					<br><span style="width:100%; float:right; text-align:left; font-style: italic;">Org</span>
-				</div>				
 				<div style="float:left;"> <!-- Valeurs event/origin -->
 					<span id="panel-f6" style="background-color:DarkSeaGreen;"><!-- + idev + --></span><!-- NO WHITESPACES
 					--><br><span id="panel-f7" style="background-color:DarkSeaGreen;"><!-- + idorg + --></span>
@@ -576,19 +536,19 @@
 		
 		<!-- Legende, en bas a droite  -->
 		<div id="panel_2"> 
-			<div style="margin:5px; font-size:xx-small; background-color:yellow">
-				<span style="display:inline-block; vertical-align:middle;">
-					<img src="http://maps.google.com/mapfiles/kml/shapes/placemark_circle_highlight.png" title="Event" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Event">Event&nbsp;&nbsp;
-				</span><!-- NO WHITESPACES
+			<div style="margin:5px; font-size:xx-small; background-color:DarkSeaGreen">
+				<span style="display:inline-block; vertical-align:middle;"><!-- NO WHITESPACES
+				--><img src="./logo_placemark_circle_highlight.png" title="Event" style="vertical-align:middle;max-width:12px; max-height:12px; border-width:0px;" alt="Catalog">Event, <!-- NO WHITESPACES
 				--><span style="display:inline-block; vertical-align:middle;">
-					(SiHex natural<img src="./logo_quake_natural.png" title="Natural" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Catalog">/<!-- NO WHITESPACES
-				--><img src="./logo_quake_artificial.png" title="Artificial" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Catalog">artificial)&nbsp;
+					SiHex<img src="./logo_quakeMw.png" title="Quake" style="vertical-align:middle; max-width:8px; max-height:8px; border-width:0px;" alt="Catalog">quake <!-- NO WHITESPACES
+				--><img src="./logo_blastMw.png" title="Blast" style="vertical-align:middle; max-width:8px; max-height:8px; border-width:0px;" alt="Catalog">blast <!-- NO WHITESPACES
+                --><img src="./logo_quake.png" title="no Mw" style="vertical-align:middle; max-width:10px; max-height:10px; border-width:0px;" alt="Catalog">no Mw,&nbsp;<!-- NO WHITESPACES
 				</span><!-- NO WHITESPACES
 				--><span style="display:inline-block; vertical-align:middle;"><!-- NO WHITESPACES
-				-->&nbsp;<img src="http://maps.google.com/mapfiles/kml/paddle/Q-ugc.png" title="Quarry" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Quarry">Quarry&nbsp;&nbsp; 
+				-->&nbsp;<img src="./logo_Q-ugc.png" title="Quarry" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Quarry">Quarry,&nbsp; 
 				</span><!-- NO WHITESPACES
 				--><span style="display:inline-block; vertical-align:middle;">
-					<img src="http://maps.google.com/mapfiles/kml/shapes/road_shield3.png" title="Station" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Station">&nbsp;Station
+					<img src="./logo_road_shield3.png" title="Station" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Station">Station
 				</span>
 			</div>
 		</div>
