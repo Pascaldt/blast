@@ -99,6 +99,11 @@ def plotpolar(origin,local):
         plt.clf()
         plt.cla()
 
+    # Filter trivial cases
+    if local == []: 
+        print "blhistory : Nothing to plot"
+        return
+
     #plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.1)    
     def Mwsurf(m):
         if not hasattr(m,'__iter__'): m = [m] # make singleton iterable

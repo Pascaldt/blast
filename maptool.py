@@ -32,7 +32,7 @@ def maptool(origin, stations):
     origin["dayname"]=datetime.strptime(origin["date"],"%Y-%m-%dT%H:%M:%S.%fZ").strftime("%a")
 
     # Write  origin 
-    fname = os.path.dirname(os.path.realpath(__file__)) + "/html/origin.js"
+    fname = cfg['file']['jsorigin']
     f = open(fname, 'w')
     f.write("// Event-dependent variables\n")
     f.write('\t\tvar lat = %f \n'%origin["lat"])

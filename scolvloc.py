@@ -1,16 +1,14 @@
 #!/usr/bin/python
-import os,numpy
+import numpy
 import closest
 
 def indic1():
-    import xmlev  
-  
-    # Local pathes
-    fcar = os.path.dirname(os.path.realpath(__file__)) + '/data/carrieres_roches_massivesll.csv'
-    forg = os.path.dirname(os.path.realpath(__file__)) + '/orginfo.xml'
-
-    # Load xml event 
-    ev   = xmlev.origin(forg)
+    import bltools  
+    cfg=bltools.get_config()
+    # Load config 
+    fcar = cfg['file']['quarries'] # Local pathes
+    forg = cfg['file']['origin']
+    ev = bltools.origin(forg)      # xml event 
 
     # print 3 smallest distances to quarries
     c=closest.closest(float(ev['lon']), float(ev['lat']), fcar) 
