@@ -141,49 +141,42 @@
 
 			// Local sismicity markers
 			function createQuake(map, quake,llev) {				                  				
-				if ( quake.length == 0 ) return;
-				for ( var i=0; i < quake.length; i++ ) {
-				//for ( var i=0; i < 14; i++ ) {
-					// lon lat
-					var lng = quake[i][4];	// longitude
-					var lat = quake[i][3];	// latitude
-					var Mw  = quake[i][8];  // Magnitude, 0->missing
-
-					// Choose natural/artificial symbol
-
+			if ( quake.length == 0 ) return;
+			for ( var i=0; i < quake.length; i++ ) {
+			//for ( var i=0; i < 14; i++ ) {
+				// lon lat
+				var lng = quake[i][4];	// longitude
+				var lat = quake[i][3];	// latitude
+				var Mw  = quake[i][8];  // Magnitude, 0->missing
                     
-                   // Quake icon sizing according to magnitude
-if (i % 50 == 0){Mw=3;}
-if (i %50 ==25){Mw=4;} 
-                    //sz = 10 + 5*Math.sqrt(Math.max(Mw-1,0)); // Empiric graphic law Mw to icon size. No magnitude, Mw=0 stands for small. 
-                    sz = 10 + 4*(Mw-1); // Empiric graphic law Mw to icon size. No magnitude, Mw=0 stands for small. 
+              		// Quake icon sizing according to magnitude
+                    	sz = 10 + 4*(Mw-1); // Empiric graphic law Mw to icon size. No magnitude, Mw=0 stands for small. 
+                    	sz = Math.max(Math.min(Math.round(sz),24),10); // Cast size into [10 19]
 
-                    sz = Math.max(Math.min(Math.round(sz),24),10); // Cast size into [10 19]
-//sz = qq
-                    //console.log("%i %f %f",i,Mw,sz)                      
+ 			// Choose natural/artificial symbol
 	                if (quake[i][7] == 'ke' || quake[i][7] == 'se' ||quake[i][7] == 'ls'){ 
                             cata_icon = './logo_quake.png';
                             zquake = 30 - sz;
-                    }else{
+                    	}else{
                             cata_icon = './logo_blast.png';
                             zquake = 60 - sz;
-                    }
-			      	var marker = new google.maps.Marker({
-					map: map,
-					position: {lat:lat,lng:lng},
-                    icon : {
-                        url : cata_icon,
+                    	}
+		      	var marker = new google.maps.Marker({
+				map: map,
+				position: {lat:lat,lng:lng},
+                    		icon : {
+                        		url : cata_icon,
                                         size : new google.maps.Size(31, 31),
      					scaledSize : new google.maps.Size(sz, sz),
 	    				anchor : new google.maps.Point(15, 15)
 		    			},
-                   	//zIndex: 3}); // Smaller quake stacked on bigger 
-                   	zIndex: zquake}); // Smaller quake stacked on bigger 			
+                   		zIndex: zquake
+				}); // Smaller quake stacked upon bigger 			
 		
-										// Label when clic
-                    label = cataLabel(quake[i]);
-					attachMessage(map, marker, label);
-				}
+			// Label when clic
+                    	label = cataLabel(quake[i]);
+			attachMessage(map, marker, label);
+			}
 			} 
 
 			function createQuarry(map, carrieres) {
