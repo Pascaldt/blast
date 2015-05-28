@@ -61,7 +61,7 @@
 
 				// Centered map
 				var map = new google.maps.Map(document.getElementById("map_canvas"), {
-					zoom : 10,
+					zoom : 11,
 					center : llmap,
 					mapTypeId : google.maps.MapTypeId.HYBRID,
 					scaleControl : true,
@@ -143,40 +143,43 @@
 			function createQuake(map, quake,llev) {				                  				
 				if ( quake.length == 0 ) return;
 				for ( var i=0; i < quake.length; i++ ) {
+				//for ( var i=0; i < 14; i++ ) {
 					// lon lat
 					var lng = quake[i][4];	// longitude
 					var lat = quake[i][3];	// latitude
 					var Mw  = quake[i][8];  // Magnitude, 0->missing
 
 					// Choose natural/artificial symbol
-	                if (quake[i][7] == 'ke' || quake[i][7] == 'se' ||quake[i][7] == 'ls'){ 
-                        if (Mw > 0)
-                            cata_icon = './logo_quakeMw.png';
-                        else
-                            cata_icon = './logo_quake.png';
-                    }else{
-                        if (Mw > 0)
-                            cata_icon = './logo_blastMw.png';
-                        else
-                            cata_icon = './logo_blast.png';
-                    }
+
                     
-                   // Sizing according magnitude when available
-                    if (Mw > 0)
-                        sz = 10*(Math.max(Mw,1)-0.5); 
-                    else
-                        sz = 14; // Default when no magnitude
-                                          
+                   // Quake icon sizing according to magnitude
+if (i % 50 == 0){Mw=3;}
+if (i %50 ==25){Mw=4;} 
+                    //sz = 10 + 5*Math.sqrt(Math.max(Mw-1,0)); // Empiric graphic law Mw to icon size. No magnitude, Mw=0 stands for small. 
+                    sz = 10 + 4*(Mw-1); // Empiric graphic law Mw to icon size. No magnitude, Mw=0 stands for small. 
+
+                    sz = Math.max(Math.min(Math.round(sz),24),10); // Cast size into [10 19]
+//sz = qq
+                    //console.log("%i %f %f",i,Mw,sz)                      
+	                if (quake[i][7] == 'ke' || quake[i][7] == 'se' ||quake[i][7] == 'ls'){ 
+                            cata_icon = './logo_quake.png';
+                            zquake = 30 - sz;
+                    }else{
+                            cata_icon = './logo_blast.png';
+                            zquake = 60 - sz;
+                    }
 			      	var marker = new google.maps.Marker({
 					map: map,
 					position: {lat:lat,lng:lng},
                     icon : {
                         url : cata_icon,
+                                        size : new google.maps.Size(31, 31),
      					scaledSize : new google.maps.Size(sz, sz),
-	    				anchor : new google.maps.Point(16, 14)
+	    				anchor : new google.maps.Point(15, 15)
 		    			},
-                   	zIndex: 50 - Math.round(10*Mw), // Smaller quake stacked on bigger 
-					});
+                   	//zIndex: 3}); // Smaller quake stacked on bigger 
+                   	zIndex: zquake}); // Smaller quake stacked on bigger 			
+		
 										// Label when clic
                     label = cataLabel(quake[i]);
 					attachMessage(map, marker, label);
@@ -540,10 +543,8 @@
 				<span style="display:inline-block; vertical-align:middle;"><!-- NO WHITESPACES
 				--><img src="./logo_placemark_circle_highlight.png" title="Event" style="vertical-align:middle;max-width:12px; max-height:12px; border-width:0px;" alt="Catalog">Event, <!-- NO WHITESPACES
 				--><span style="display:inline-block; vertical-align:middle;">
-					SiHex<img src="./logo_quakeMw.png" title="Quake" style="vertical-align:middle; max-width:8px; max-height:8px; border-width:0px;" alt="Catalog">quake <!-- NO WHITESPACES
-				--><img src="./logo_blastMw.png" title="Blast" style="vertical-align:middle; max-width:8px; max-height:8px; border-width:0px;" alt="Catalog">blast <!-- NO WHITESPACES
-                --><img src="./logo_quake.png" title="no Mw" style="vertical-align:middle; max-width:10px; max-height:10px; border-width:0px;" alt="Catalog">no Mw,&nbsp;<!-- NO WHITESPACES
-				</span><!-- NO WHITESPACES
+					SiHex<img src="./logo_quake.png" title="Quake" style="vertical-align:middle; max-width:8px; max-height:8px; border-width:0px;" alt="Catalog">quake <!-- NO WHITESPACES
+				--><img src="./logo_blast.png" title="Blast" style="vertical-align:middle; max-width:8px; max-height:8px; border-width:0px;" alt="Catalog">blast <!-- NO WHITESPACES
 				--><span style="display:inline-block; vertical-align:middle;"><!-- NO WHITESPACES
 				-->&nbsp;<img src="./logo_Q-ugc.png" title="Quarry" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Quarry">Quarry,&nbsp; 
 				</span><!-- NO WHITESPACES
