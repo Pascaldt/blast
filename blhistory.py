@@ -73,6 +73,7 @@ def plotpolar(origin,local):
     from datetime import datetime
     import pytz
    
+    #print origin
     #  Quakes time, normalised in [0,1]*day, and fractional year
     tsnaive = [datetime.strptime(x['date'] + 'T' + x['time'],"%Y/%m/%dT%H:%M:%S.%f") for x in local] # datetime structure
     timestamp =  [x.replace(tzinfo=pytz.utc).astimezone(pytz.timezone('Europe/Paris')) for x in tsnaive] # aware
@@ -95,10 +96,12 @@ def plotpolar(origin,local):
     tit = " Local Quakes  "
     #tit=2
     
-    natcol = '#663300' # natural, artif, plots background and frame colors
-    artfcol= '#0000FF'   
-    bgcol='AntiqueWhite'     
-    frmcol='LightGray'
+    quakcol = 'DarkOrange' # quake, other events, plots background and frame colors
+    otherscol= 'CornflowerBlue'   
+#    bgcol='AntiqueWhite' 
+    bgcol='Gainsboro' 
+    #bgcol='DarkSlateGray' 
+    frmcol='Olive'
     #tit = 'Local History (SiHex) of ' + origin['date'] + ' (utc) lon ' + str(origin['lon']) + ' lat ' + str(origin['lat'])
     if tit not in plt.get_figlabels():     # Create figure or make current
         fig=plt.figure(num=tit,figsize=(14, 7), facecolor=frmcol) # create       
@@ -115,15 +118,16 @@ def plotpolar(origin,local):
     # Convert magnitude to surface area
     def Mwsurf(m):
         if not hasattr(m,'__iter__'): m = [m] # make singleton iterable
-        return [10*(max(x,1.5)-.5)**2 for x in m]
+        #return [10*(max(x,1.5)-.5)**2 for x in m]
+        return [(1+4*max(x,1))**2 for x in m] # Scale like ReNaSS
 
         
     #%%  === Plot 1 : Radial Date ===   
     # Prepare data
     plt.subplots_adjust(left=0.02, right=0.97, top=0.9, bottom=0.15)    
-    tit3 = "%s (local)\n%-8.4f(lon)\n%-8.4f(lat)" % (origin['loctime'],origin['lon'],origin['lat'])
+    tit3 = "%s (local)\n%-8.4f(lon)\n%-8.4f(lat)\nmag %-4.1f" % (origin['loctime'],origin['lon'],origin['lat'],origin['m'])
     fig.suptitle(tit3,y=0.97,verticalalignment = 'top',weight='bold',horizontalalignment = 'center')
-    fig.suptitle("SiHex",y=0.05,verticalalignment = 'bottom',weight='bold',color=natcol,fontsize= 'large')
+    fig.suptitle("SiHex",y=0.05,verticalalignment = 'bottom',weight='bold',color='k',fontsize= 'large')
     
     theta = 2*np.pi*np.array(frac_hour)
     
@@ -134,15 +138,15 @@ def plotpolar(origin,local):
     
     inner=np.asarray([3000-x for x in frac_year])         # Substitute year with arbitrary descreasing index
     # Plot catalog and event
-    natindex = [i for i in xrange(len(local)) if local[i]['type'] in ('ke','se','ls')] # Separate artificial from natural
-    artfindex = [i for i in xrange(len(local)) if local[i]['type'] not in ('ke','se','ls')] # to plot on top
+    natindex = [i for i in xrange(len(local)) if local[i]['type'] in ('ke','se')] # Separate artificial from quakes
+    artfindex = [i for i in xrange(len(local)) if local[i]['type'] not in ('ke','se')] # to plot on top
 
     area = Mwsurf([x['Mw'] for x in local]) # Convert magnitudes to spot surface
     area = np.asarray(area)
     areaorg = Mwsurf(origin['m'])
-    plt.scatter(theta[natindex], inner[natindex], s=area[natindex], c=natcol, alpha=.9, linewidth=0, zorder=2) # Plot natural
-    plt.scatter(theta[artfindex], inner[artfindex], s=area[artfindex], c=artfcol, alpha=1, linewidth=0, zorder=3) # Plot artificial    
-    plt.scatter(theta[-1], inner[-1],s=areaorg,facecolors='w',linewidth=3,edgecolors='r',zorder=4) # Overplot origin
+    plt.scatter(theta[natindex], inner[natindex], s=area[natindex], c=quakcol, alpha=.9, linewidth=0.5, zorder=2) #  quakes
+    plt.scatter(theta[artfindex], inner[artfindex], s=area[artfindex], c=otherscol, alpha=1, linewidth=0.5, zorder=3) #  artificial    
+    plt.scatter(theta[-1], inner[-1],s=areaorg,c='r',linewidth=0.5,edgecolor='k',zorder=4) # Overplot origin
 
     #  Time angular axis
     labelsy =  ['Time-Date\n 0h', '','2h','','4h','','6h','','8h','','10h','','12h','','14h','','16h','','18h','','20h','','22h',''] # Subtitude labels
@@ -164,16 +168,16 @@ def plotpolar(origin,local):
             label.append(' ')
     plt.rgrids(val2, label, angle=40,weight='bold')  # Print Year labels    
     cntr = ax.axis()[2]      # aiguille
-    plt.plot([0,theta[-1]],[cntr,inner[-1]],linewidth=1,c='k')   
+    plt.plot([0,theta[-1]],[cntr,inner[-1]],linewidth=1,c='k',zorder=5)   
     
     #%%  === Plot 2 : Radial Distance ===      
                                              # Substitute radial labels for descending years
     # Prepare legend
     ax2 = plt.subplot(122, polar=True)       # Polar view
     aref = Mwsurf([1.5,2,3]) # Prepare for legend
-    p1=plt.scatter(theta[-1], dist[-1],s=aref[0],facecolors='w',linewidth=1,edgecolors='r')    # Event
-    p2=plt.scatter(theta[-1], dist[-1],s=aref[1],c=natcol,alpha=.9,linewidth=0)                # Natural
-    p3=plt.scatter(theta[-1], dist[-1],s=aref[1],c=artfcol,alpha=.9,linewidth=0)               # Artificial
+    p1=plt.scatter(theta[-1], dist[-1],s=aref[1],c='r',linewidth=0.5,edgecolors='k')    # Event
+    p2=plt.scatter(theta[-1], dist[-1],s=aref[1],c=quakcol,alpha=.9,linewidth=0.5)                # Quake
+    p3=plt.scatter(theta[-1], dist[-1],s=aref[1],c=otherscol,alpha=.9,linewidth=0.5)               # Artificial
     p4=plt.scatter(theta[-1], dist[-1],s=aref[0],facecolors='none',edgecolors='k',linewidth=1) # Mw < 1.5
     p5=plt.scatter(theta[-1], dist[-1],s=aref[1],facecolors='none',edgecolors='k',linewidth=1) #  2
     p6=plt.scatter(theta[-1], dist[-1],s=aref[2],facecolors='none',edgecolors='k',linewidth=1) #  3
@@ -188,11 +192,12 @@ def plotpolar(origin,local):
     inner = (0-innerrat*max(dist))/(1-innerrat)
     ax2.set_ylim(inner,max(dist))
     
-    plt.scatter(theta[natindex], dist[natindex],s=area[natindex],c=natcol,alpha=.9,linewidth=0,zorder=2)
-    plt.scatter(theta[artfindex], dist[artfindex],s=area[artfindex],c=artfcol,alpha=1,linewidth=0,zorder=2)
-    plt.scatter(theta[-1], dist[-1],s=areaorg,facecolors='w',linewidth=3,edgecolors='r',zorder=4)
+    plt.scatter(theta[natindex], dist[natindex],s=area[natindex],c=quakcol,alpha=.9,linewidth=0.5,zorder=2)
+    plt.scatter(theta[artfindex], dist[artfindex],s=area[artfindex],c=otherscol,alpha=1,linewidth=0.5,zorder=2)
+    plt.scatter(theta[-1], dist[-1],s=areaorg,c='r',linewidth=0.5,edgecolor='k',zorder=4)
+    #plt.scatter(theta[-1], dist[-1],s=areaorg,facecolors='w',linewidth=3,edgecolors='r',zorder=4)
     
-    legd = fig.legend((p1,p2,p3,p4,p5,p6),('Origin','Natural','Artificial','Mw <1.5','  2','  3'),'upper right',scatterpoints=1,prop={'size':10})
+    legd = fig.legend((p1,p2,p3,p4,p5,p6),('Candidate','Quake','Other','Mw <1','  2','  3'),'upper right',scatterpoints=1,prop={'size':10})
     frm = legd.get_frame()
     frm.set_facecolor(bgcol)
 
@@ -205,7 +210,7 @@ def plotpolar(origin,local):
     plt.rgrids(val, lab2, angle=45, weight='bold')
     
     cntr = ax2.axis()[2]      # aiguille
-    plt.plot([0,theta[-1]],[cntr,dist[-1]],linewidth=1,c='k')   
+    plt.plot([0,theta[-1]],[cntr,dist[-1]],linewidth=1,c='k',zorder=5)   
     #  Time angular axis
     labelsd =  ['Time-Distance\n 0h', '','2h','','4h','','6h','','8h','','10h','','12h','','14h','','16h','','18h','','20h','','22h',''] # Subtitude labels
 
@@ -216,8 +221,8 @@ def plotpolar(origin,local):
 #%%    
 if __name__ == "__main__":
     import os
-    print "PYTHONPATH " + os.environ['PYTHONPATH']
-    print "LD_LIBRARY_PATH " + os.environ['LD_LIBRARY_PATH']
+    #print "PYTHONPATH " + os.environ['PYTHONPATH']
+    #print "LD_LIBRARY_PATH " + os.environ['LD_LIBRARY_PATH']
 
 
     import bltools

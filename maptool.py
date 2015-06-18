@@ -7,7 +7,6 @@ Created on Thu Jun 19 16:08:42 2014
 """
 def maptool(origin, stations):
    # Launch map visu and sismicity plots
-    import os
     import bltools
     cfg=bltools.get_config()
       
@@ -45,6 +44,7 @@ def maptool(origin, stations):
     f.write('\t\tvar weekday= "%s" \n'%origin["dayname"]) 
     f.write('\t\tvar idev= "%s" \n'%origin["idev"])
     f.write('\t\tvar idorg= "%s" \n'%origin["idorg"])
+    f.write('\t\tvar m = %f \n'%origin["m"])
     f.close()
 
     # Write javascript inventory array 

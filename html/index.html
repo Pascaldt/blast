@@ -72,21 +72,42 @@
 				});
 
 				// Grid coordinates
-				grid = new Graticule(map, false);
+				grid = new Graticule(map, false);	
 
 				// Event
-				var marker = new google.maps.Marker({
-					position : llev,
-					icon : {
-						url : "./logo_placemark_circle_highlight.png",
-						size : new google.maps.Size(32, 32),
-						scaledSize : new google.maps.Size(20, 20),
-						origin : new google.maps.Point(0, 0),
-                        zIndex: 1, // Useless because in lower layer than markers
-						anchor : new google.maps.Point(20/2 -1, 20/2)
-					},
-					map : map
-				});
+				
+				
+//				var marker = new google.maps.Marker({
+//					position : llev,
+//					icon : {
+//						url : "./logo_placemark_circle_highlight.png",
+//						size : new google.maps.Size(32, 32),
+//						scaledSize : new google.maps.Size(20, 20),
+//						origin : new google.maps.Point(0, 0),
+//                        zIndex: 1, // Useless because in lower layer than markers
+//						anchor : new google.maps.Point(20/2 -1, 20/2)
+//					},
+//					map : map
+//				});
+
+				// Event
+				console.log("TOTOOOO")
+				esz = mag2size(m);
+				console.log(m);
+				console.log(esz);
+                var marker = new google.maps.Marker({
+                  position: llev,
+                  icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    fillOpacity: 1.0,
+                    fillColor: 'red',
+                    strokeOpacity: 1.0,
+                    strokeColor: 'black',
+                    strokeWeight: 0.5, 
+                    scale: esz //pixels
+                  },
+                  map:map
+                });	
 
 				// Uncertainty rectangle
 				var dlatm = dlat * 1000;
@@ -99,7 +120,7 @@
 					strokeWeight : 2,
 					strokeColor : "#EE82EE",
 					fillColor : "#EE82EE",
-					fillOpacity : 0.15,
+					fillOpacity : 0.0,
 					map : map,
 					bounds : new google.maps.LatLngBounds(sw, ne)
 				});
@@ -128,7 +149,7 @@
 					ficon = './logo_daytime.png';
 				}
 				var pfield3 = document.getElementById('panel-f3'); // Local time
-				pfield3.innerHTML = '<img src="' + ficon + '"  style="height:18px;vertical-align:middle;"/>' + '   <b>' + weekday + ", " + String(loctime) + "</b>" ;
+				pfield3.innerHTML = '<b> Local &nbsp;</b>' + '<img src="' + ficon + '"  style="height:18px;vertical-align:middle;"/>' + '   <b>' + weekday + ", " + String(loctime) + "</b>" ;
 				var pfield4 = document.getElementById('panel-f4'); // Lon
 				pfield4.innerHTML = String(lng.toFixed(3));
 				var pfield5 = document.getElementById('panel-f5'); // Lat
@@ -141,42 +162,47 @@
 
 			// Local sismicity markers
 			function createQuake(map, quake,llev) {				                  				
-			if ( quake.length == 0 ) return;
-			for ( var i=0; i < quake.length; i++ ) {
+				if ( quake.length == 0 ) return;
+				for ( var i=0; i < quake.length; i++ ) {
 			//for ( var i=0; i < 14; i++ ) {
 				// lon lat
-				var lng = quake[i][4];	// longitude
-				var lat = quake[i][3];	// latitude
-				var Mw  = quake[i][8];  // Magnitude, 0->missing
+					var lng = quake[i][4];	// longitude
+					var lat = quake[i][3];	// latitude
+					var Mw  = quake[i][8];  // Magnitude, 0->missing
                     
-              		// Quake icon sizing according to magnitude
-                    	sz = 10 + 4*(Mw-1); // Empiric graphic law Mw to icon size. No magnitude, Mw=0 stands for small. 
-                    	sz = Math.max(Math.min(Math.round(sz),24),10); // Cast size into [10 19]
+                    sz = mag2size(Mw);
 
- 			// Choose natural/artificial symbol
-	                if (quake[i][7] == 'ke' || quake[i][7] == 'se' ||quake[i][7] == 'ls'){ 
-                            cata_icon = './logo_quake.png';
-                            zquake = 30 - sz;
-                    	}else{
-                            cata_icon = './logo_blast.png';
-                            zquake = 60 - sz;
-                    	}
-		      	var marker = new google.maps.Marker({
-				map: map,
-				position: {lat:lat,lng:lng},
-                    		icon : {
-                        		url : cata_icon,
-                                        size : new google.maps.Size(31, 31),
-     					scaledSize : new google.maps.Size(sz, sz),
-	    				anchor : new google.maps.Point(15, 15)
-		    			},
-                   		zIndex: zquake
-				}); // Smaller quake stacked upon bigger 			
+ 			    // Choose natural/artificial color
+                if (quake[i][7] == 'ke' || quake[i][7] == 'se'){
+                        quakcol = 'DarkOrange'
+                        cata_icon = './logo_quake.png';
+                        zquake = 30 - sz;
+                    }else{ // Other events
+                        quakcol = 'CornflowerBlue'
+                        cata_icon = './logo_blast.png';
+                        zquake = 60 - sz;
+                }
+                
+                // Quakes circle marker and other
+                var marker = new google.maps.Marker({
+                  position: {lat:lat,lng:lng},
+                  icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    fillOpacity: 1.0,
+                    fillColor: quakcol,
+                    strokeOpacity: 1.0,
+                    strokeColor: 'black',
+                    strokeWeight: 0.5, 
+                    scale: sz //pixels
+                  },
+                  zIndex: zquake,
+                  map:map
+                });	
 		
 			// Label when clic
-                    	label = cataLabel(quake[i]);
-			attachMessage(map, marker, label);
-			}
+                label = cataLabel(quake[i]);
+				attachMessage(map, marker, label);
+				}
 			} 
 
 			function createQuarry(map, carrieres) {
@@ -500,6 +526,13 @@
 				});
 			}
 			
+			function mag2size(m) {
+               	mp = Math.max(Math.min(m,5),1); // Cast Mw into Mw [1 5]
+			    return Math.round(2+mp*2); // Proportions like ReNaSS
+			    //return(4+Math.sqrt(16*(mp-1))); // test amplify small magnitudes
+				}
+
+			
 		</script>
 	</head>
 	<body onload="initialize()">
@@ -537,7 +570,7 @@
 				--><img src="./logo_placemark_circle_highlight.png" title="Event" style="vertical-align:middle;max-width:12px; max-height:12px; border-width:0px;" alt="Catalog">Event, <!-- NO WHITESPACES
 				--><span style="display:inline-block; vertical-align:middle;">
 					SiHex<img src="./logo_quake.png" title="Quake" style="vertical-align:middle; max-width:8px; max-height:8px; border-width:0px;" alt="Catalog">quake <!-- NO WHITESPACES
-				--><img src="./logo_blast.png" title="Blast" style="vertical-align:middle; max-width:8px; max-height:8px; border-width:0px;" alt="Catalog">blast <!-- NO WHITESPACES
+				--><img src="./logo_blast.png" title="Blast" style="vertical-align:middle; max-width:8px; max-height:8px; border-width:0px;" alt="Catalog">other <!-- NO WHITESPACES
 				--><span style="display:inline-block; vertical-align:middle;"><!-- NO WHITESPACES
 				-->&nbsp;<img src="./logo_Q-ugc.png" title="Quarry" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Quarry">Quarry,&nbsp; 
 				</span><!-- NO WHITESPACES
