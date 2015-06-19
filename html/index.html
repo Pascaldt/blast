@@ -91,10 +91,7 @@
 //				});
 
 				// Event
-				console.log("TOTOOOO")
 				esz = mag2size(m);
-				console.log(m);
-				console.log(esz);
                 var marker = new google.maps.Marker({
                   position: llev,
                   icon: {
@@ -135,7 +132,7 @@
 
 				// Preparer cartouche superieur
 				var pfield2 = document.getElementById('panel-f2'); // UTC
-				pfield2.innerHTML = '<i>' + String(date.substring(0,10)) + '&nbsp;' + String(date.substring(11,19)) + '(UTC)</i>';
+				pfield2.innerHTML = '<i> UTC &nbsp; </i>' + String(date.substring(0,10)) + '&nbsp;' + String(date.substring(11,19)) ;
 //				var pfield3 = document.getElementById('panel-f3'); // Local time
 //				pfield3.innerHTML = '<b>' + weekday + ", " + String(loctime) + "</b>";
 				// Local Day/Night symbol
