@@ -38,7 +38,11 @@ def get_local(origin):
     t0 = datetime.strptime(origin['date'],"%Y-%m-%dT%H:%M:%S.%fZ").replace(tzinfo=pytz.timezone('Europe/Paris')) # datetime structure
     tlocal =  [datetime.strptime(x['date'] + 'T' + x['time'],"%Y/%m/%dT%H:%M:%S.%f"). \
       replace(tzinfo=pytz.utc).astimezone(pytz.timezone('Europe/Paris')) for x in local]
-      
+
+    # Limit to 500 closer in time
+    for i in xrange(len(local)):
+        local[i]['dt']=round((tlocal[i]-t0).total_seconds()/86400.,5)   
+
     #   Select 10 years extraction tmax,tmin
     if   t0 >= max(tlocal):     tmax = max(tlocal)  # Event more recent than catalog
     elif t0 > max(tlocal)-half: tmax= max(tlocal)   # Event close to catalog end  
@@ -231,6 +235,9 @@ if __name__ == "__main__":
     origin = bltools.origin(cfg['file']['origin'])
     local = get_local(origin)
     #print local
+    max_markers = cfg['param']['max_marker']
+    print local
+    
     writejs(local)
     
     plotpolar(origin,local)

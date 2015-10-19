@@ -431,15 +431,15 @@
 			
 			function drawReticle(map,llev) {
 				// Concentric reticle
-				var colorreticule = "Gold";
+				var colorreticule = "Yellow";
 				for (var i = 0; i <= 20; i++) {// Concentric circles
-					var thick = 0.3 + 0.6 * (i % 5 == 0) + 1.1 * (i % 10 == 0);
+					var thick = 0.6 + 0.6 * (i % 5 == 0) + 1.1 * (i % 10 == 0);
 					var ev = new google.maps.Circle({
 						center : llev,
 						radius : i * 1000,
 						strokeWeight : thick,
 						strokeColor : colorreticule,
-						strokeOpacity : 0.8,
+						strokeOpacity : 1,
 						fillOpacity : 0.00,
 						map : map
 					});
@@ -448,16 +448,16 @@
 				// Cross reticle
 				//   H bars 
 				var r = 6378137;	// Earth radius (m) for google maps
-				var inner = 1000 / r * (Math.PI / 180);	// Internal 1km diameter (deg)
+				var inner = 0 / r * (Math.PI / 180);	// Internal 1km diameter (deg)
 				var lenkm = 22e3;
 				var h1r = lenkm / (r * (Math.cos(lat * Math.PI / 180)));	// Longitude begin-end offsets
-				var h2r = 1000 / (r * (Math.cos(lat * Math.PI / 180)));
+				var h2r = 0 / (r * (Math.cos(lat * Math.PI / 180)));
 				var h1 = h1r * 180 / Math.PI;	// Big (degree)
 				var h2 = h2r * 180 / Math.PI;	// Little
 
 				//   V bars 
 				var v1r = lenkm / r;	// Latitude begin-end offsets
-				var v2r = 1000 / r;
+				var v2r = 0 / r;
 				var v1 = v1r * 180 / Math.PI;	// Big
 				var v2 = v2r * 180 / Math.PI;	// Little
 
@@ -476,7 +476,7 @@
 					var Path = new google.maps.Polyline({
 						path : [ Cross[2 * i], Cross[2 * i + 1] ],
 						strokeColor : colorreticule,
-						strokeOpacity : 0.8,
+						strokeOpacity : 1,
 						strokeWeight : 1,
 						map : map
 					});
