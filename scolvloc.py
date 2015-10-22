@@ -30,7 +30,4 @@ def indic1():
 
 if __name__ == "__main__":
     import sys
-    import flushev
-
-    flushev.flushev()
     sys.exit(indic1())

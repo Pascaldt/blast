@@ -106,12 +106,18 @@ def isnight(lat,lng,date,altit=20):
     fred.horizon = '-0:34'
 
     # Return night-time when next event is a sunrise 
-    nextrise=fred.next_rising(ephem.Sun()) #Sunrise
-    nextset =fred.next_setting   (ephem.Sun()) #Sunset
+    try:
+        nextrise=fred.next_rising(ephem.Sun())  # rize time < set time ?
+        nextset =fred.next_setting(ephem.Sun()) 
+    except ephem.NeverUpError:
+        # print 'sun neverup'
+        return 1    # Permanent night
+    except ephem.AlwaysUpError:
+        # print 'sun alwaysup'        
+        return 0    # Permanent day                
     
-    # Debug print [lng, lat, nextrise, nextset]
     if nextrise < nextset:
-        return 1    # Next event is a rise so we are night
+        return 1    # Y: it is local night
     else:
         return 0
         
