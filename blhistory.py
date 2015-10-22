@@ -3,6 +3,7 @@
 # Draw plots of historic sismicity
 #
 
+
 import numpy as np
 import bltools
 cfg=bltools.get_config()    
@@ -112,7 +113,7 @@ def plotpolar(origin,local):
 
     # Filter trivial cases
     if local == []: 
-        print "blhistory : Nothing to plot"
+        print "blhistory : No history to plot"
         return
 
     # Convert magnitude to surface area

@@ -1,42 +1,49 @@
-30/10/2014:
+20/10/2015:
 
  Description :
  -------------
- Maptool affiche dans l'explorateur par défaut les informations provenant de 
-  seiscomp et les complete. L'intéraction avec la config seiscomp se limite à :
-  - Etendre scolv.cfg et queries.cfg
-  - Installer ephem.py + dependance. 
-  - Tout les autre fichiers tiennent dans un répertoire unique ~/seiscomp/blast
+ Maptool affiche la vue satellite d'un seisme, typiquement via seiscomp3, complétée d'informations pour faciliter la discrimination des tirs de carrière.
+- pointage des carrières 
+- echelle des distances 
+- sismicite historique 
+- heure, jour/nuit, numero de jour locaux 
+- statistiques locales
+
+
+Le module se trouve dans un répertoire unique, aucune modification de seiscomp3 n'est necessaire. L'intéraction avec seiscomp3 se limite à completer deux fichiers de configuration, scolv.cfg et queries.cfg.
 
  Installation :
  --------------
-  $ cd
-  sauver la config actuelle, si ces fichiers existent :
-  $ cp seiscomp3/etc/scolv.cfg seiscomp3/etc/scolvref.cfg 
-  $ cp .seiscomp3/queries.cfg .seiscomp3/queriesref.cfg 
+  sans github: telecharger https://github.com/scresif/blast/archive/master.zip
+  mkdir ~/seiscomp3/blast
+  y placer les fichiers decomprimes
 
-   sans github:  
-  telecharger https://github.com/scresif/blast/archive/master.zip
-  renomer Downloads/blast-master en ~/tmp
+  avec github: 
+  $ git clone https://github.com/scresif/blast.git ~/seiscomp3/blast (!!a verifier repertoire et pull)
 
-   avec github: 
-  $ git clone https://github.com/scresif/blast.git tmp
+  Seules modifications de config seiscomp3: ajouts labellises
+  $ cd ~/seiscomp3/blast
+  $ cat cfg/addto_scolv.cfg >>  ~/seiscomp3/etc/scolv.cfg
+  $ cat cfg/addto_queries.cfg >>  ~/.seiscomp3/queries.cfg
 
+  Verifier les droits en exec:
+  $ chmod +x flushev.py scolvloc.py maptool_callback.py
 
-
-  $ mv tmp/seiscomp3/blast ~/seiscomp3/ 
-  Merger le debut de tmp/.seiscomp3/queries.cfg dans ~/.seiscomp3/queries.cfg 
-  Merger tmp/seiscomp3/etc/scolv.cfg dans ~/seiscomp3/etc/scolv.cfg
-  Effacer ~/tmp 
-
- Librairies python:
+ Librairies python pyephem et pytz:
  ------------------
   $ sudo app-get install ephem ou bien sudo pip install ephem avec dependance  
-  Voilà. (Re)lancer scolv, en mode debug pour voir si tout va bien
+  
+ Utilisation :
+ ------------- 
+  Fermer scolv et le relancer. Ajouter le mode debug pour voir si tout va bien:
+  (fermer scolv)
   $ seiscomp exec scolv --debug 
-  Merci pour vos remarques (pascal.guterman@dt.insu.cnrs.fr)
 
+  Sur selection d'une origine, des informations complementaires apparaissent dans scolv/location view : Distance aux 3 plus proches carrieres, bouton "Map tool" affichant vue satellite et diagrammes statistiques
+   
+  Merci pour vos remarques à pascal.guterman@cnrs.fr
 
+ 
  liste des fichiers:
  -------------------
   seiscomp/etc/scolv.cfg       ajout indicateurs et bouton "Maptool"

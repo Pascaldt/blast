@@ -1,93 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <seiscomp xmlns="http://geofon.gfz-potsdam.de/ns/seiscomp3-schema/0.7" version="0.7">
   <EventParameters>
-    <pick publicID="20150512.154125.46-CA.CEST..HHZ">
+    <pick publicID="20151007.094342.35-FR.ASEAF.00.HHZ">
       <time>
-        <value>2015-05-12T15:41:25.46Z</value>
+        <value>2015-10-07T09:43:42.359999Z</value>
       </time>
-      <waveformID networkCode="CA" stationCode="CEST" channelCode="HHZ"/>
+      <waveformID networkCode="FR" stationCode="ASEAF" locationCode="00" channelCode="HHZ"/>
       <methodID>Trigger</methodID>
       <phaseHint>P</phaseHint>
       <evaluationMode>automatic</evaluationMode>
       <creationInfo>
         <agencyID>dt</agencyID>
         <author>scautopick@pascal-VirtualBox</author>
-        <creationTime>2015-05-12T15:41:47.235236Z</creationTime>
+        <creationTime>2015-10-07T09:43:48.052921Z</creationTime>
       </creationInfo>
     </pick>
-    <pick publicID="20150512.154125.97-CA.ARBS..HHZ">
+    <pick publicID="20151007.094412.97-CA.CPAL..HHZ">
       <time>
-        <value>2015-05-12T15:41:25.97Z</value>
-      </time>
-      <waveformID networkCode="CA" stationCode="ARBS" channelCode="HHZ"/>
-      <methodID>Trigger</methodID>
-      <phaseHint>P</phaseHint>
-      <evaluationMode>automatic</evaluationMode>
-      <creationInfo>
-        <agencyID>dt</agencyID>
-        <author>scautopick@pascal-VirtualBox</author>
-        <creationTime>2015-05-12T15:41:31.064782Z</creationTime>
-      </creationInfo>
-    </pick>
-    <pick publicID="20150512.154127.22-FR.FILF.00.HHZ">
-      <time>
-        <value>2015-05-12T15:41:27.22285Z</value>
-      </time>
-      <waveformID networkCode="FR" stationCode="FILF" locationCode="00" channelCode="HHZ"/>
-      <methodID>Trigger</methodID>
-      <phaseHint>P</phaseHint>
-      <evaluationMode>automatic</evaluationMode>
-      <creationInfo>
-        <agencyID>dt</agencyID>
-        <author>scautopick@pascal-VirtualBox</author>
-        <creationTime>2015-05-12T15:41:30.888796Z</creationTime>
-      </creationInfo>
-    </pick>
-    <pick publicID="20150512.154130.01-CA.CSOR..HHZ">
-      <time>
-        <value>2015-05-12T15:41:30.01Z</value>
-      </time>
-      <waveformID networkCode="CA" stationCode="CSOR" channelCode="HHZ"/>
-      <methodID>Trigger</methodID>
-      <phaseHint>P</phaseHint>
-      <evaluationMode>automatic</evaluationMode>
-      <creationInfo>
-        <agencyID>dt</agencyID>
-        <author>scautopick@pascal-VirtualBox</author>
-        <creationTime>2015-05-12T15:41:44.038877Z</creationTime>
-      </creationInfo>
-    </pick>
-    <pick publicID="20150512.154134.79-CA.CBEU..HHZ">
-      <time>
-        <value>2015-05-12T15:41:34.79Z</value>
-      </time>
-      <waveformID networkCode="CA" stationCode="CBEU" channelCode="HHZ"/>
-      <methodID>Trigger</methodID>
-      <phaseHint>P</phaseHint>
-      <evaluationMode>automatic</evaluationMode>
-      <creationInfo>
-        <agencyID>dt</agencyID>
-        <author>scautopick@pascal-VirtualBox</author>
-        <creationTime>2015-05-12T15:41:39.855725Z</creationTime>
-      </creationInfo>
-    </pick>
-    <pick publicID="20150512.154137.53-FR.ARBF.00.HHZ">
-      <time>
-        <value>2015-05-12T15:41:37.533Z</value>
-      </time>
-      <waveformID networkCode="FR" stationCode="ARBF" locationCode="00" channelCode="HHZ"/>
-      <methodID>Trigger</methodID>
-      <phaseHint>P</phaseHint>
-      <evaluationMode>automatic</evaluationMode>
-      <creationInfo>
-        <agencyID>dt</agencyID>
-        <author>scautopick@pascal-VirtualBox</author>
-        <creationTime>2015-05-12T17:12:12.212525Z</creationTime>
-      </creationInfo>
-    </pick>
-    <pick publicID="20150512.154138.86-CA.CPAL..HHZ">
-      <time>
-        <value>2015-05-12T15:41:38.86Z</value>
+        <value>2015-10-07T09:44:12.97Z</value>
       </time>
       <waveformID networkCode="CA" stationCode="CPAL" channelCode="HHZ"/>
       <methodID>Trigger</methodID>
@@ -96,135 +26,279 @@
       <creationInfo>
         <agencyID>dt</agencyID>
         <author>scautopick@pascal-VirtualBox</author>
-        <creationTime>2015-05-12T15:41:49.839273Z</creationTime>
+        <creationTime>2015-10-07T09:44:19.927225Z</creationTime>
       </creationInfo>
     </pick>
-    <amplitude publicID="20150512.154125.97-CA.ARBS..HHZ.MLv">
-      <type>MLv</type>
-      <amplitude>
-        <value>0.1047957485</value>
-      </amplitude>
-      <timeWindow>
-        <reference>2015-05-12T15:41:34.479999Z</reference>
-        <begin>-13.51</begin>
-        <end>141.49</end>
-      </timeWindow>
-      <snr>2.2090221</snr>
-      <pickID>20150512.154125.97-CA.ARBS..HHZ</pickID>
-      <waveformID networkCode="CA" stationCode="ARBS" channelCode="HHZ"/>
+    <pick publicID="20151007.094418.91-CA.CBEU..HHZ">
+      <time>
+        <value>2015-10-07T09:44:18.91Z</value>
+      </time>
+      <waveformID networkCode="CA" stationCode="CBEU" channelCode="HHZ"/>
+      <methodID>Trigger</methodID>
+      <phaseHint>P</phaseHint>
+      <evaluationMode>automatic</evaluationMode>
       <creationInfo>
         <agencyID>dt</agencyID>
         <author>scautopick@pascal-VirtualBox</author>
-        <creationTime>2015-05-12T15:44:08.433319Z</creationTime>
+        <creationTime>2015-10-07T09:44:32.100843Z</creationTime>
       </creationInfo>
-    </amplitude>
-    <amplitude publicID="20150512.154134.79-CA.CBEU..HHZ.MLv">
+    </pick>
+    <pick publicID="20151007.094419.62-FR.FILF.00.HHZ">
+      <time>
+        <value>2015-10-07T09:44:19.627887Z</value>
+      </time>
+      <waveformID networkCode="FR" stationCode="FILF" locationCode="00" channelCode="HHZ"/>
+      <methodID>Trigger</methodID>
+      <phaseHint>P</phaseHint>
+      <evaluationMode>automatic</evaluationMode>
+      <creationInfo>
+        <agencyID>dt</agencyID>
+        <author>scautopick@pascal-VirtualBox</author>
+        <creationTime>2015-10-07T09:44:23.607092Z</creationTime>
+      </creationInfo>
+    </pick>
+    <pick publicID="20151007.094423.63-CA.CBRU..HHZ">
+      <time>
+        <value>2015-10-07T09:44:23.637698Z</value>
+      </time>
+      <waveformID networkCode="CA" stationCode="CBRU" channelCode="HHZ"/>
+      <methodID>Trigger</methodID>
+      <phaseHint>P</phaseHint>
+      <evaluationMode>automatic</evaluationMode>
+      <creationInfo>
+        <agencyID>dt</agencyID>
+        <author>scautopick@pascal-VirtualBox</author>
+        <creationTime>2015-10-07T09:44:31.593592Z</creationTime>
+      </creationInfo>
+    </pick>
+    <pick publicID="20151007.094433.12-CA.CEST..HHZ">
+      <time>
+        <value>2015-10-07T09:44:33.129999Z</value>
+      </time>
+      <waveformID networkCode="CA" stationCode="CEST" channelCode="HHZ"/>
+      <methodID>Trigger</methodID>
+      <phaseHint>P</phaseHint>
+      <evaluationMode>automatic</evaluationMode>
+      <creationInfo>
+        <agencyID>dt</agencyID>
+        <author>scautopick@pascal-VirtualBox</author>
+        <creationTime>2015-10-07T09:44:39.672976Z</creationTime>
+      </creationInfo>
+    </pick>
+    <pick publicID="20151007.094434.46-CA.CSOR..HHZ">
+      <time>
+        <value>2015-10-07T09:44:34.46Z</value>
+      </time>
+      <waveformID networkCode="CA" stationCode="CSOR" channelCode="HHZ"/>
+      <methodID>Trigger</methodID>
+      <phaseHint>P</phaseHint>
+      <evaluationMode>automatic</evaluationMode>
+      <creationInfo>
+        <agencyID>dt</agencyID>
+        <author>scautopick@pascal-VirtualBox</author>
+        <creationTime>2015-10-07T09:44:44.03294Z</creationTime>
+      </creationInfo>
+    </pick>
+    <pick publicID="20151007.094439.45-CA.CTRE..HHZ">
+      <time>
+        <value>2015-10-07T09:44:39.45Z</value>
+      </time>
+      <waveformID networkCode="CA" stationCode="CTRE" channelCode="HHZ"/>
+      <methodID>Trigger</methodID>
+      <phaseHint>P</phaseHint>
+      <evaluationMode>automatic</evaluationMode>
+      <creationInfo>
+        <agencyID>dt</agencyID>
+        <author>scautopick@pascal-VirtualBox</author>
+        <creationTime>2015-10-07T09:44:50.30578Z</creationTime>
+      </creationInfo>
+    </pick>
+    <amplitude publicID="20151007.094418.91-CA.CBEU..HHZ.MLv">
       <type>MLv</type>
       <amplitude>
-        <value>0.1162705096</value>
+        <value>0.3303315132</value>
       </amplitude>
       <timeWindow>
-        <reference>2015-05-12T15:44:01.67Z</reference>
-        <begin>-151.88</begin>
-        <end>3.12</end>
+        <reference>2015-10-07T09:46:15.44Z</reference>
+        <begin>-121.53</begin>
+        <end>33.47</end>
       </timeWindow>
-      <snr>2.110102344</snr>
-      <pickID>20150512.154134.79-CA.CBEU..HHZ</pickID>
+      <snr>1.633567226</snr>
+      <pickID>20151007.094418.91-CA.CBEU..HHZ</pickID>
       <waveformID networkCode="CA" stationCode="CBEU" channelCode="HHZ"/>
       <creationInfo>
         <agencyID>dt</agencyID>
         <author>scautopick@pascal-VirtualBox</author>
-        <creationTime>2015-05-12T15:44:17.215823Z</creationTime>
+        <creationTime>2015-10-07T09:46:54.730192Z</creationTime>
       </creationInfo>
     </amplitude>
-    <amplitude publicID="20150512.154125.46-CA.CEST..HHZ.MLv">
+    <amplitude publicID="20151007.094423.63-CA.CBRU..HHZ.MLv">
       <type>MLv</type>
       <amplitude>
-        <value>0.1101759363</value>
+        <value>0.2553581324</value>
       </amplitude>
       <timeWindow>
-        <reference>2015-05-12T15:41:34.769999Z</reference>
-        <begin>-14.31</begin>
-        <end>140.69</end>
+        <reference>2015-10-07T09:45:45.447698Z</reference>
+        <begin>-86.81</begin>
+        <end>68.19</end>
       </timeWindow>
-      <snr>2.355994668</snr>
-      <pickID>20150512.154125.46-CA.CEST..HHZ</pickID>
+      <snr>1.582698578</snr>
+      <pickID>20151007.094423.63-CA.CBRU..HHZ</pickID>
+      <waveformID networkCode="CA" stationCode="CBRU" channelCode="HHZ"/>
+      <creationInfo>
+        <agencyID>dt</agencyID>
+        <author>scautopick@pascal-VirtualBox</author>
+        <creationTime>2015-10-07T09:47:01.769301Z</creationTime>
+      </creationInfo>
+    </amplitude>
+    <amplitude publicID="20151007.094433.12-CA.CEST..HHZ.MLv">
+      <type>MLv</type>
+      <amplitude>
+        <value>0.178874628</value>
+      </amplitude>
+      <timeWindow>
+        <reference>2015-10-07T09:46:44.18Z</reference>
+        <begin>-136.05</begin>
+        <end>18.95</end>
+      </timeWindow>
+      <snr>2.050652992</snr>
+      <pickID>20151007.094433.12-CA.CEST..HHZ</pickID>
       <waveformID networkCode="CA" stationCode="CEST" channelCode="HHZ"/>
       <creationInfo>
         <agencyID>dt</agencyID>
         <author>scautopick@pascal-VirtualBox</author>
-        <creationTime>2015-05-12T15:44:02.353384Z</creationTime>
+        <creationTime>2015-10-07T09:47:09.79852Z</creationTime>
       </creationInfo>
     </amplitude>
-    <amplitude publicID="20150512.154130.01-CA.CSOR..HHZ.MLv">
+    <amplitude publicID="20151007.094412.97-CA.CPAL..HHZ.MLv">
       <type>MLv</type>
       <amplitude>
-        <value>0.08755411648</value>
+        <value>0.2514063997</value>
       </amplitude>
       <timeWindow>
-        <reference>2015-05-12T15:41:41.019999Z</reference>
-        <begin>-16.01</begin>
-        <end>138.99</end>
+        <reference>2015-10-07T09:44:46.509999Z</reference>
+        <begin>-38.54</begin>
+        <end>116.46</end>
       </timeWindow>
-      <snr>1.579761128</snr>
-      <pickID>20150512.154130.01-CA.CSOR..HHZ</pickID>
+      <snr>1.608445733</snr>
+      <pickID>20151007.094412.97-CA.CPAL..HHZ</pickID>
+      <waveformID networkCode="CA" stationCode="CPAL" channelCode="HHZ"/>
+      <creationInfo>
+        <agencyID>dt</agencyID>
+        <author>scautopick@pascal-VirtualBox</author>
+        <creationTime>2015-10-07T09:46:49.803317Z</creationTime>
+      </creationInfo>
+    </amplitude>
+    <amplitude publicID="20151007.094434.46-CA.CSOR..HHZ.MLv">
+      <type>MLv</type>
+      <amplitude>
+        <value>0.19872277</value>
+      </amplitude>
+      <timeWindow>
+        <reference>2015-10-07T09:46:42.949999Z</reference>
+        <begin>-133.49</begin>
+        <end>21.51</end>
+      </timeWindow>
+      <snr>1.976890987</snr>
+      <pickID>20151007.094434.46-CA.CSOR..HHZ</pickID>
       <waveformID networkCode="CA" stationCode="CSOR" channelCode="HHZ"/>
       <creationInfo>
         <agencyID>dt</agencyID>
         <author>scautopick@pascal-VirtualBox</author>
-        <creationTime>2015-05-12T15:44:06.741735Z</creationTime>
+        <creationTime>2015-10-07T09:47:14.097127Z</creationTime>
       </creationInfo>
     </amplitude>
-    <amplitude publicID="Amplitude#20150512171212.460632.6235">
+    <amplitude publicID="20151007.094439.45-CA.CTRE..HHZ.MLv">
       <type>MLv</type>
       <amplitude>
-        <value>0.2675507185</value>
+        <value>0.2140444143</value>
       </amplitude>
       <timeWindow>
-        <reference>2015-05-12T15:41:38.9489Z</reference>
-        <begin>-6.416</begin>
-        <end>155.112</end>
+        <reference>2015-10-07T09:45:07.0000Z</reference>
+        <begin>-32.55</begin>
+        <end>122.45</end>
       </timeWindow>
-      <snr>2.796590486</snr>
-      <pickID>20150512.154137.53-FR.ARBF.00.HHZ</pickID>
-      <waveformID networkCode="FR" stationCode="ARBF" locationCode="00" channelCode="HHZ"/>
+      <snr>1.814672</snr>
+      <pickID>20151007.094439.45-CA.CTRE..HHZ</pickID>
+      <waveformID networkCode="CA" stationCode="CTRE" channelCode="HHZ"/>
+      <creationInfo>
+        <agencyID>dt</agencyID>
+        <author>scautopick@pascal-VirtualBox</author>
+        <creationTime>2015-10-07T09:47:20.471884Z</creationTime>
+      </creationInfo>
+    </amplitude>
+    <amplitude publicID="Amplitude#20151007094502.970204.9309">
+      <type>MLv</type>
+      <amplitude>
+        <value>1.588142372</value>
+      </amplitude>
+      <timeWindow>
+        <reference>2015-10-07T09:44:06.199999Z</reference>
+        <begin>-28.84</begin>
+        <end>52.36</end>
+      </timeWindow>
+      <snr>2.025347805</snr>
+      <pickID>20151007.094342.35-FR.ASEAF.00.HHZ</pickID>
+      <waveformID networkCode="FR" stationCode="ASEAF" locationCode="00" channelCode="HHZ"/>
       <creationInfo>
         <agencyID>dt</agencyID>
         <author>scamp@pascal-VirtualBox</author>
-        <creationTime>2015-05-12T17:12:12.460677Z</creationTime>
+        <creationTime>2015-10-07T09:45:02.970287Z</creationTime>
       </creationInfo>
     </amplitude>
-    <amplitude publicID="20150512.154127.22-FR.FILF.00.HHZ.MLv">
+    <amplitude publicID="20151007.094419.62-FR.FILF.00.HHZ.MLv">
       <type>MLv</type>
       <amplitude>
-        <value>0.001076128202</value>
+        <value>0.003432894215</value>
       </amplitude>
       <timeWindow>
-        <reference>2015-05-12T15:41:23.162849Z</reference>
-        <begin>-0.94</begin>
-        <end>154.06</end>
+        <reference>2015-10-07T09:46:31.807891Z</reference>
+        <begin>-137.18</begin>
+        <end>17.82</end>
       </timeWindow>
-      <snr>1.538581412</snr>
-      <pickID>20150512.154127.22-FR.FILF.00.HHZ</pickID>
+      <snr>2.184993098</snr>
+      <pickID>20151007.094419.62-FR.FILF.00.HHZ</pickID>
       <waveformID networkCode="FR" stationCode="FILF" locationCode="00" channelCode="HHZ"/>
       <creationInfo>
         <agencyID>dt</agencyID>
         <author>scautopick@pascal-VirtualBox</author>
-        <creationTime>2015-05-12T15:44:01.720527Z</creationTime>
+        <creationTime>2015-10-07T09:46:52.142511Z</creationTime>
       </creationInfo>
     </amplitude>
-    <origin publicID="Origin#20150512171212.304419.4864">
+    <amplitude publicID="20151007.094439.45-CA.CTRE..HHZ.mb">
+      <type>mb</type>
+      <amplitude>
+        <value>21.0715045</value>
+      </amplitude>
+      <timeWindow>
+        <reference>2015-10-07T09:44:39.16Z</reference>
+        <begin>-4.71</begin>
+        <end>30.29</end>
+      </timeWindow>
+      <period>
+        <value>1.58</value>
+      </period>
+      <snr>0.9767047319</snr>
+      <pickID>20151007.094439.45-CA.CTRE..HHZ</pickID>
+      <waveformID networkCode="CA" stationCode="CTRE" channelCode="HHZ"/>
+      <creationInfo>
+        <agencyID>dt</agencyID>
+        <author>scautopick@pascal-VirtualBox</author>
+        <creationTime>2015-10-07T09:45:20.358803Z</creationTime>
+      </creationInfo>
+    </amplitude>
+    <origin publicID="Origin#20151007094450.475434.7308">
       <time>
-        <value>2015-05-12T15:40:44.843452Z</value>
-        <uncertainty>4.935362341</uncertainty>
+        <value>2015-10-07T09:43:20.152343Z</value>
+        <uncertainty>6.628398959</uncertainty>
       </time>
       <latitude>
-        <value>45.14337158</value>
-        <uncertainty>37.35114499</uncertainty>
+        <value>42.61614227</value>
+        <uncertainty>60.64615852</uncertainty>
       </latitude>
       <longitude>
-        <value>1.155580044</value>
-        <uncertainty>24.46081149</uncertainty>
+        <value>7.841995239</value>
+        <uncertainty>52.07600834</uncertainty>
       </longitude>
       <depth>
         <value>10</value>
@@ -233,160 +307,207 @@
       <methodID>LOCSAT</methodID>
       <earthModelID>pyrenees</earthModelID>
       <quality>
-        <associatedPhaseCount>7</associatedPhaseCount>
-        <usedPhaseCount>6</usedPhaseCount>
-        <associatedStationCount>7</associatedStationCount>
-        <usedStationCount>6</usedStationCount>
-        <standardError>1.290455988</standardError>
-        <azimuthalGap>297.1060944</azimuthalGap>
-        <maximumDistance>3.413451433</maximumDistance>
-        <minimumDistance>2.545759916</minimumDistance>
-        <medianDistance>2.754238367</medianDistance>
+        <associatedPhaseCount>8</associatedPhaseCount>
+        <usedPhaseCount>8</usedPhaseCount>
+        <associatedStationCount>8</associatedStationCount>
+        <usedStationCount>8</usedStationCount>
+        <standardError>0.769537995</standardError>
+        <azimuthalGap>347.5351562</azimuthalGap>
+        <maximumDistance>5.221645832</maximumDistance>
+        <minimumDistance>1.246277213</minimumDistance>
+        <medianDistance>4.092427254</medianDistance>
       </quality>
       <evaluationMode>automatic</evaluationMode>
       <creationInfo>
         <agencyID>dt</agencyID>
         <author>scautoloc@pascal-VirtualBox</author>
-        <creationTime>2015-05-12T17:12:12.304405Z</creationTime>
+        <creationTime>2015-10-07T09:44:50.475354Z</creationTime>
       </creationInfo>
       <arrival>
-        <pickID>20150512.154125.46-CA.CEST..HHZ</pickID>
+        <pickID>20151007.094342.35-FR.ASEAF.00.HHZ</pickID>
         <phase>P</phase>
-        <azimuth>178.3686981</azimuth>
-        <distance>2.545759916</distance>
-        <timeResidual>-0.06324005127</timeResidual>
+        <azimuth>278.8104248</azimuth>
+        <distance>1.246277213</distance>
+        <timeResidual>0.005434036255</timeResidual>
         <weight>1</weight>
       </arrival>
       <arrival>
-        <pickID>20150512.154125.97-CA.ARBS..HHZ</pickID>
+        <pickID>20151007.094412.97-CA.CPAL..HHZ</pickID>
         <phase>P</phase>
-        <azimuth>174.108963</azimuth>
-        <distance>2.722907543</distance>
-        <timeResidual>-1.999706268</timeResidual>
+        <azimuth>266.5233765</azimuth>
+        <distance>3.465236425</distance>
+        <timeResidual>-0.7131595612</timeResidual>
         <weight>1</weight>
       </arrival>
       <arrival>
-        <pickID>20150512.154127.22-FR.FILF.00.HHZ</pickID>
+        <pickID>20151007.094418.91-CA.CBEU..HHZ</pickID>
         <phase>P</phase>
-        <azimuth>160.1708832</azimuth>
-        <distance>2.739455938</distance>
-        <timeResidual>-0.9888038635</timeResidual>
+        <azimuth>266.3455811</azimuth>
+        <distance>3.829297066</distance>
+        <timeResidual>0.186750412</timeResidual>
         <weight>1</weight>
       </arrival>
       <arrival>
-        <pickID>20150512.154130.01-CA.CSOR..HHZ</pickID>
+        <pickID>20151007.094419.62-FR.FILF.00.HHZ</pickID>
         <phase>P</phase>
-        <azimuth>180.349884</azimuth>
-        <distance>2.769020796</distance>
-        <timeResidual>1.405174255</timeResidual>
+        <azimuth>271.0202637</azimuth>
+        <distance>3.993982315</distance>
+        <timeResidual>-1.377275467</timeResidual>
         <weight>1</weight>
       </arrival>
       <arrival>
-        <pickID>20150512.154134.79-CA.CBEU..HHZ</pickID>
+        <pickID>20151007.094423.63-CA.CBRU..HHZ</pickID>
         <phase>P</phase>
-        <azimuth>158.6361389</azimuth>
-        <distance>3.089668036</distance>
-        <timeResidual>1.740066528</timeResidual>
+        <azimuth>267.3763428</azimuth>
+        <distance>4.190872192</distance>
+        <timeResidual>-0.09185600281</timeResidual>
         <weight>1</weight>
       </arrival>
       <arrival>
-        <pickID>20150512.154137.53-FR.ARBF.00.HHZ</pickID>
+        <pickID>20151007.094433.12-CA.CEST..HHZ</pickID>
         <phase>P</phase>
-        <azimuth>117.4559784</azimuth>
-        <distance>3.413451433</distance>
-        <timeResidual>-0.09357452393</timeResidual>
+        <azimuth>272.0242004</azimuth>
+        <distance>4.847637177</distance>
+        <timeResidual>0.3161182404</timeResidual>
         <weight>1</weight>
       </arrival>
       <arrival>
-        <pickID>20150512.154138.86-CA.CPAL..HHZ</pickID>
+        <pickID>20151007.094434.46-CA.CSOR..HHZ</pickID>
         <phase>P</phase>
-        <azimuth>152.1924591</azimuth>
-        <distance>3.182227373</distance>
-        <timeResidual>4.519294739</timeResidual>
-        <weight>0</weight>
+        <azimuth>269.4731445</azimuth>
+        <distance>4.951586246</distance>
+        <timeResidual>0.2094593048</timeResidual>
+        <weight>1</weight>
       </arrival>
-      <stationMagnitude publicID="Origin#20150512171212.304419.4864#staMag.MLv#CA.ARBS">
+      <arrival>
+        <pickID>20151007.094439.45-CA.CTRE..HHZ</pickID>
+        <phase>P</phase>
+        <azimuth>269.1663513</azimuth>
+        <distance>5.221645832</distance>
+        <timeResidual>1.464540482</timeResidual>
+        <weight>1</weight>
+      </arrival>
+      <stationMagnitude publicID="Origin#20151007094450.475434.7308#staMag.MLv#FR.ASEAF">
         <magnitude>
-          <value>3.033366925</value>
+          <value>3.39340153</value>
         </magnitude>
         <type>MLv</type>
-        <amplitudeID>20150512.154125.97-CA.ARBS..HHZ.MLv</amplitudeID>
-        <waveformID networkCode="CA" stationCode="ARBS" channelCode="HHZ"/>
+        <amplitudeID>Amplitude#20151007094502.970204.9309</amplitudeID>
+        <waveformID networkCode="FR" stationCode="ASEAF" locationCode="00" channelCode="HHZ"/>
         <creationInfo>
           <agencyID>dt</agencyID>
           <author>scmag@pascal-VirtualBox</author>
-          <creationTime>2015-05-12T17:12:12.343279Z</creationTime>
+          <creationTime>2015-10-07T09:45:02.983889Z</creationTime>
         </creationInfo>
       </stationMagnitude>
-      <stationMagnitude publicID="Origin#20150512171212.304419.4864#staMag.MLv#CA.CBEU">
+      <stationMagnitude publicID="Origin#20151007094450.475434.7308#staMag.mb#CA.CTRE">
         <magnitude>
-          <value>3.28228865</value>
+          <value>3.907776206</value>
         </magnitude>
-        <type>MLv</type>
-        <amplitudeID>20150512.154134.79-CA.CBEU..HHZ.MLv</amplitudeID>
-        <waveformID networkCode="CA" stationCode="CBEU" channelCode="HHZ"/>
+        <type>mb</type>
+        <amplitudeID>20151007.094439.45-CA.CTRE..HHZ.mb</amplitudeID>
+        <waveformID networkCode="CA" stationCode="CTRE" channelCode="HHZ"/>
         <creationInfo>
           <agencyID>dt</agencyID>
           <author>scmag@pascal-VirtualBox</author>
-          <creationTime>2015-05-12T17:12:12.343453Z</creationTime>
+          <creationTime>2015-10-07T09:45:20.365696Z</creationTime>
         </creationInfo>
       </stationMagnitude>
-      <stationMagnitude publicID="Origin#20150512171212.304419.4864#staMag.MLv#CA.CEST">
+      <stationMagnitude publicID="Origin#20151007094450.475434.7308#staMag.MLv#CA.CPAL">
         <magnitude>
-          <value>2.956675351</value>
+          <value>3.825885453</value>
         </magnitude>
         <type>MLv</type>
-        <amplitudeID>20150512.154125.46-CA.CEST..HHZ.MLv</amplitudeID>
-        <waveformID networkCode="CA" stationCode="CEST" channelCode="HHZ"/>
+        <amplitudeID>20151007.094412.97-CA.CPAL..HHZ.MLv</amplitudeID>
+        <waveformID networkCode="CA" stationCode="CPAL" channelCode="HHZ"/>
         <creationInfo>
           <agencyID>dt</agencyID>
           <author>scmag@pascal-VirtualBox</author>
-          <creationTime>2015-05-12T17:12:12.343602Z</creationTime>
+          <creationTime>2015-10-07T09:46:49.811697Z</creationTime>
         </creationInfo>
       </stationMagnitude>
-      <stationMagnitude publicID="Origin#20150512171212.304419.4864#staMag.MLv#CA.CSOR">
+      <stationMagnitude publicID="Origin#20151007094450.475434.7308#staMag.MLv#FR.FILF">
         <magnitude>
-          <value>2.980923332</value>
+          <value>2.134351938</value>
         </magnitude>
         <type>MLv</type>
-        <amplitudeID>20150512.154130.01-CA.CSOR..HHZ.MLv</amplitudeID>
-        <waveformID networkCode="CA" stationCode="CSOR" channelCode="HHZ"/>
-        <creationInfo>
-          <agencyID>dt</agencyID>
-          <author>scmag@pascal-VirtualBox</author>
-          <creationTime>2015-05-12T17:12:12.343743Z</creationTime>
-        </creationInfo>
-      </stationMagnitude>
-      <stationMagnitude publicID="Origin#20150512171212.304419.4864#staMag.MLv#FR.FILF">
-        <magnitude>
-          <value>1.054082631</value>
-        </magnitude>
-        <type>MLv</type>
-        <amplitudeID>20150512.154127.22-FR.FILF.00.HHZ.MLv</amplitudeID>
+        <amplitudeID>20151007.094419.62-FR.FILF.00.HHZ.MLv</amplitudeID>
         <waveformID networkCode="FR" stationCode="FILF" locationCode="00" channelCode="HHZ"/>
         <creationInfo>
           <agencyID>dt</agencyID>
           <author>scmag@pascal-VirtualBox</author>
-          <creationTime>2015-05-12T17:12:12.343882Z</creationTime>
+          <creationTime>2015-10-07T09:46:52.150681Z</creationTime>
         </creationInfo>
       </stationMagnitude>
-      <stationMagnitude publicID="Origin#20150512171212.304419.4864#staMag.MLv#FR.ARBF">
+      <stationMagnitude publicID="Origin#20151007094450.475434.7308#staMag.MLv#CA.CBEU">
         <magnitude>
-          <value>3.82414016</value>
+          <value>4.076462133</value>
         </magnitude>
         <type>MLv</type>
-        <amplitudeID>Amplitude#20150512171212.460632.6235</amplitudeID>
-        <waveformID networkCode="FR" stationCode="ARBF" locationCode="00" channelCode="HHZ"/>
+        <amplitudeID>20151007.094418.91-CA.CBEU..HHZ.MLv</amplitudeID>
+        <waveformID networkCode="CA" stationCode="CBEU" channelCode="HHZ"/>
         <creationInfo>
           <agencyID>dt</agencyID>
           <author>scmag@pascal-VirtualBox</author>
-          <creationTime>2015-05-12T17:12:12.470262Z</creationTime>
+          <creationTime>2015-10-07T09:46:54.738103Z</creationTime>
         </creationInfo>
       </stationMagnitude>
-      <magnitude publicID="Origin#20150512171212.304419.4864#netMag.MLv">
+      <stationMagnitude publicID="Origin#20151007094450.475434.7308#staMag.MLv#CA.CBRU">
         <magnitude>
-          <value>2.993957768</value>
-          <uncertainty>0.5853758846</uncertainty>
+          <value>4.055073339</value>
+        </magnitude>
+        <type>MLv</type>
+        <amplitudeID>20151007.094423.63-CA.CBRU..HHZ.MLv</amplitudeID>
+        <waveformID networkCode="CA" stationCode="CBRU" channelCode="HHZ"/>
+        <creationInfo>
+          <agencyID>dt</agencyID>
+          <author>scmag@pascal-VirtualBox</author>
+          <creationTime>2015-10-07T09:47:01.777588Z</creationTime>
+        </creationInfo>
+      </stationMagnitude>
+      <stationMagnitude publicID="Origin#20151007094450.475434.7308#staMag.MLv#CA.CEST">
+        <magnitude>
+          <value>4.064695856</value>
+        </magnitude>
+        <type>MLv</type>
+        <amplitudeID>20151007.094433.12-CA.CEST..HHZ.MLv</amplitudeID>
+        <waveformID networkCode="CA" stationCode="CEST" channelCode="HHZ"/>
+        <creationInfo>
+          <agencyID>dt</agencyID>
+          <author>scmag@pascal-VirtualBox</author>
+          <creationTime>2015-10-07T09:47:09.807702Z</creationTime>
+        </creationInfo>
+      </stationMagnitude>
+      <stationMagnitude publicID="Origin#20151007094450.475434.7308#staMag.MLv#CA.CSOR">
+        <magnitude>
+          <value>4.136387111</value>
+        </magnitude>
+        <type>MLv</type>
+        <amplitudeID>20151007.094434.46-CA.CSOR..HHZ.MLv</amplitudeID>
+        <waveformID networkCode="CA" stationCode="CSOR" channelCode="HHZ"/>
+        <creationInfo>
+          <agencyID>dt</agencyID>
+          <author>scmag@pascal-VirtualBox</author>
+          <creationTime>2015-10-07T09:47:14.10626Z</creationTime>
+        </creationInfo>
+      </stationMagnitude>
+      <stationMagnitude publicID="Origin#20151007094450.475434.7308#staMag.MLv#CA.CTRE">
+        <magnitude>
+          <value>4.236171523</value>
+        </magnitude>
+        <type>MLv</type>
+        <amplitudeID>20151007.094439.45-CA.CTRE..HHZ.MLv</amplitudeID>
+        <waveformID networkCode="CA" stationCode="CTRE" channelCode="HHZ"/>
+        <creationInfo>
+          <agencyID>dt</agencyID>
+          <author>scmag@pascal-VirtualBox</author>
+          <creationTime>2015-10-07T09:47:20.480405Z</creationTime>
+        </creationInfo>
+      </stationMagnitude>
+      <magnitude publicID="Origin#20151007094450.475434.7308#netMag.MLv">
+        <magnitude>
+          <value>3.92531757</value>
+          <uncertainty>0.2815952115</uncertainty>
         </magnitude>
         <type>MLv</type>
         <methodID>trimmed mean(25)</methodID>
@@ -394,36 +515,44 @@
         <creationInfo>
           <agencyID>dt</agencyID>
           <author>scmag@pascal-VirtualBox</author>
-          <creationTime>2015-05-12T17:12:12.343947Z</creationTime>
+          <creationTime>2015-10-07T09:45:02.983981Z</creationTime>
         </creationInfo>
         <stationMagnitudeContribution>
-          <stationMagnitudeID>Origin#20150512171212.304419.4864#staMag.MLv#CA.ARBS</stationMagnitudeID>
+          <stationMagnitudeID>Origin#20151007094450.475434.7308#staMag.MLv#CA.CBEU</stationMagnitudeID>
           <weight>1</weight>
         </stationMagnitudeContribution>
         <stationMagnitudeContribution>
-          <stationMagnitudeID>Origin#20150512171212.304419.4864#staMag.MLv#CA.CBEU</stationMagnitudeID>
+          <stationMagnitudeID>Origin#20151007094450.475434.7308#staMag.MLv#CA.CBRU</stationMagnitudeID>
           <weight>1</weight>
         </stationMagnitudeContribution>
         <stationMagnitudeContribution>
-          <stationMagnitudeID>Origin#20150512171212.304419.4864#staMag.MLv#CA.CEST</stationMagnitudeID>
+          <stationMagnitudeID>Origin#20151007094450.475434.7308#staMag.MLv#CA.CEST</stationMagnitudeID>
           <weight>1</weight>
         </stationMagnitudeContribution>
         <stationMagnitudeContribution>
-          <stationMagnitudeID>Origin#20150512171212.304419.4864#staMag.MLv#CA.CSOR</stationMagnitudeID>
+          <stationMagnitudeID>Origin#20151007094450.475434.7308#staMag.MLv#CA.CPAL</stationMagnitudeID>
           <weight>1</weight>
         </stationMagnitudeContribution>
         <stationMagnitudeContribution>
-          <stationMagnitudeID>Origin#20150512171212.304419.4864#staMag.MLv#FR.ARBF</stationMagnitudeID>
-          <weight>0.25</weight>
+          <stationMagnitudeID>Origin#20151007094450.475434.7308#staMag.MLv#CA.CSOR</stationMagnitudeID>
+          <weight>1</weight>
         </stationMagnitudeContribution>
         <stationMagnitudeContribution>
-          <stationMagnitudeID>Origin#20150512171212.304419.4864#staMag.MLv#FR.FILF</stationMagnitudeID>
-          <weight>0.25</weight>
+          <stationMagnitudeID>Origin#20151007094450.475434.7308#staMag.MLv#CA.CTRE</stationMagnitudeID>
+          <weight>0</weight>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>Origin#20151007094450.475434.7308#staMag.MLv#FR.ASEAF</stationMagnitudeID>
+          <weight>1</weight>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>Origin#20151007094450.475434.7308#staMag.MLv#FR.FILF</stationMagnitudeID>
+          <weight>0</weight>
         </stationMagnitudeContribution>
       </magnitude>
-      <magnitude publicID="Origin#20150512171212.304419.4864#netMag.M">
+      <magnitude publicID="Origin#20151007094450.475434.7308#netMag.M">
         <magnitude>
-          <value>2.993957768</value>
+          <value>3.919470449</value>
         </magnitude>
         <type>M</type>
         <methodID>weighted average</methodID>
@@ -431,9 +560,27 @@
         <creationInfo>
           <agencyID>dt</agencyID>
           <author>scmag@pascal-VirtualBox</author>
-          <creationTime>2015-05-12T17:12:12.34402Z</creationTime>
-          <modificationTime>2015-05-12T17:12:12.470377Z</modificationTime>
+          <creationTime>2015-10-07T09:45:02.986901Z</creationTime>
+          <modificationTime>2015-10-07T09:47:20.480529Z</modificationTime>
         </creationInfo>
+      </magnitude>
+      <magnitude publicID="Origin#20151007094450.475434.7308#netMag.mb">
+        <magnitude>
+          <value>3.907776206</value>
+          <uncertainty>0</uncertainty>
+        </magnitude>
+        <type>mb</type>
+        <methodID>mean</methodID>
+        <stationCount>1</stationCount>
+        <creationInfo>
+          <agencyID>dt</agencyID>
+          <author>scmag@pascal-VirtualBox</author>
+          <creationTime>2015-10-07T09:45:20.365731Z</creationTime>
+        </creationInfo>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>Origin#20151007094450.475434.7308#staMag.mb#CA.CTRE</stationMagnitudeID>
+          <weight>1</weight>
+        </stationMagnitudeContribution>
       </magnitude>
     </origin>
   </EventParameters>

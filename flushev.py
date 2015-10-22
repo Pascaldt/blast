@@ -4,11 +4,10 @@
 def flushev():
     import seiscomp3.DataModel, seiscomp3.IO
     import os, sys
-    
+
     foutxml = os.path.dirname(os.path.realpath(__file__)) + "/orginfo.xml"
     foutev  = os.path.dirname(os.path.realpath(__file__)) + "/orginfo_ev.txt"
     foutinv = os.path.dirname(os.path.realpath(__file__)) + "/orginfo_inventory.xml"
-        
     # Read Origin
     ar = seiscomp3.IO.BinaryArchive()
     if not ar.open("-"):
@@ -47,3 +46,5 @@ def flushev():
     foutev.write(idev)
     foutev.close()    
    
+if __name__ == "__main__":
+    flushev()
