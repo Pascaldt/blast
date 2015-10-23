@@ -2,7 +2,7 @@
 
  Description :
  -------------
- Maptool affiche la vue satellite d'un seisme, typiquement via seiscomp3, complétée d'informations pour faciliter la discrimination des tirs de carrière.
+ Maptool affiche via seiscomp3 la vue satellite d'un seisme  complétée d'informations pour faciliter la discrimination des tirs de carrière (ex. http://scresif.olympe.in).
 - pointage des carrières 
 - echelle des distances 
 - sismicite historique 
@@ -35,9 +35,8 @@ Le module se trouve dans un répertoire unique, aucune modification de seiscomp3
   
  Utilisation :
  ------------- 
-  Fermer scolv et le relancer. Ajouter le mode debug pour voir si tout va bien:
-  (fermer scolv)
-  $ seiscomp exec scolv --debug 
+  Mettre a jour les chemins dans blast.cfg. Fermer scolv, puis:
+  $ seiscomp exec scolv --debug (le mode debug est facultatif. Il permet de voir si tout va bien)
 
   Sur selection d'une origine, des informations complementaires apparaissent dans scolv/location view : Distance aux 3 plus proches carrieres, bouton "Map tool" affichant vue satellite et diagrammes statistiques
    
@@ -46,42 +45,31 @@ Le module se trouve dans un répertoire unique, aucune modification de seiscomp3
  
  liste des fichiers:
  -------------------
-  seiscomp/etc/scolv.cfg       ajout indicateurs et bouton "Maptool"
-  .seiscomp/queries.cfg        extension de config
   blast/readme.txt
+  blast/blast.cfg              chemins et parametres
+  blast/blhistory.py           historique local. Sortie javascript et plots                    
+  blast/bltools.py             lecture config et fichiers dynamiques (stations, event, ..)
   blast/closest.py             carrieres les plus proches
-  blast/flushev.py             ecriture xml des epicentre et inventaire 
-  blast/indic1.py              calcul indicateurs dans scolv onglet 'Location'
-  blast/maptool_callback.py    point d'entre maptool. Lecture origin, stations, carrieres et affichage 
-  blast/maptool.py             conversion xml --> javascript des infos dynamiques 
-  blast/orginfo.xml            data dynamique - epicentre xml. 
-  blast/orginfo_ev.txt         data dynamique - nom d'evenement
-  blast/orginfo_inventory.xml  data dynamique - stations xml (recree à chaque fois)
-  blast/xmlev.py               extraction sc3 xml bas niveau
+  blast/flushev.py             ecriture infos internes seiscomp dans fichiers dynamiques
+  blast/maptool.py             (2) creation et lancement vue satellite et plots 
+  blast/maptool_callback.py    (1) point d'entre haut niveau du bouton "Map tool" 
+  blast/orginfo.xml            dynamique - epicentre. 
+  blast/orginfo_ev.txt         dynamique - evenement
+  blast/orginfo_inventory.xml  dynamique - stations 
 
-
+  html/carrieres.js            dynamique
+  html/history.js              dynamique
+  html/index.html              point d'entree vue satellite            
   html/infobox.js              popup
-  html/logo_daytime.png        logos jour/lunch/nuit locale
-  html/logo_sandwich.png       
-  html/logo_sleepmoon.gif      
-  html/logo_void.png           si erreur
-  html/maptool.html            fichier principal
+  html/logo_*.png              logos et markers javascript
+  html/origin.js               dynamique
+  html/stations.js             dynamique
+  html/carrieres.js            dynamique
   html/v3_ll_grat.js           grille des lon-lat
-  html/origin.js               data dynamique epicentre, carrieres et stations 
-  html/carrieres.js            
-  html/stations.js             
 
+  cfg/addto_queries.cfg        copier dans --> .seiscomp/queries.cfg
+  cfg/addto_scolv.cfg          copier dans --> seiscomp/etc/scolv.cfg
 
+  data/                        catalogues sismique et carrieres (voir blast.cfg), petits outils de conversion. 
 
-
- Preprocessing:
- --------------
-  - rassembler, trier la liste des carrières csv
-  - la convertir en js
-
-  - data/carrieres_roches_massivesll.csv
-
- A faire:
- --------
- - diagrammes polaires
-
+  -- fin --
