@@ -15,7 +15,6 @@ def get_config():
 # Get config    
     import ConfigParser
     cfg = ConfigParser.ConfigParser()
-    import os
     BLAST_DIR = os.path.dirname(os.path.realpath(__file__)) + "/"
     cfg.read(BLAST_DIR+"blast.cfg")    
         
@@ -174,14 +173,10 @@ def origin(f):
     
     # Load event ID
     cfg = get_config()
-    fevt = cfg['file']['evid']
-    try:
-        fid   = open(fevt, 'r')
-        out['idev']  = fid.readline()
-        fid.close()
-    except IOError:        
-        out['idev']  = ""
-
+    import cPickle as pickle
+    orgp = pickle.load( open(cfg['file']['originp'], "rb" ) ) # pickle file
+    out['idev'] = orgp['idev']
+    
     return out     
     
 ###########################################################

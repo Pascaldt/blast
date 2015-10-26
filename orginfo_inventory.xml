@@ -1814,6 +1814,43 @@
       <archive>EOST</archive>
       <restricted>false</restricted>
       <shared>true</shared>
+      <station publicID="Station#20130116150901.751622.15" code="LBL_stra">
+        <start>1989-01-01T00:00:00.0000Z</start>
+        <description>Lubilhac</description>
+        <latitude>45.232</latitude>
+        <longitude>3.247</longitude>
+        <elevation>950</elevation>
+        <place>Lubilhac</place>
+        <affiliation>FR - Reseaux CP d'Auvergne</affiliation>
+        <archive>EOST</archive>
+        <restricted>false</restricted>
+        <shared>true</shared>
+        <sensorLocation publicID="SensorLocation#20130116150901.751784.16" code="">
+          <start>1970-01-01T00:00:00.0000Z</start>
+          <latitude>45.232</latitude>
+          <longitude>3.247</longitude>
+          <elevation>950</elevation>
+          <stream code="SHZ" datalogger="Datalogger#20130116150901.751853.17" sensor="Sensor#20130116150901.751976.19">
+            <start>1970-01-01T00:00:00.0000Z</start>
+            <dataloggerSerialNumber>xxxx</dataloggerSerialNumber>
+            <dataloggerChannel>0</dataloggerChannel>
+            <sensorSerialNumber>yyyy</sensorSerialNumber>
+            <sensorChannel>0</sensorChannel>
+            <sampleRateNumerator>100</sampleRateNumerator>
+            <sampleRateDenominator>1</sampleRateDenominator>
+            <depth>0</depth>
+            <azimuth>0</azimuth>
+            <dip>-90</dip>
+            <gain>1270660000</gain>
+            <gainFrequency>6</gainFrequency>
+            <gainUnit>M/S</gainUnit>
+            <format>Steim1</format>
+            <flags>CG</flags>
+            <restricted>false</restricted>
+            <shared>true</shared>
+          </stream>
+        </sensorLocation>
+      </station>
     </network>
     <network publicID="Network#20130524090907.26054.3513" code="FR">
       <start>1995-05-24T00:00:00.0000Z</start>

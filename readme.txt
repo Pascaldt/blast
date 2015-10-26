@@ -54,7 +54,7 @@ Le module se trouve dans un répertoire unique, aucune modification de seiscomp3
   blast/maptool.py             (2) creation et lancement vue satellite et plots 
   blast/maptool_callback.py    (1) point d'entre haut niveau du bouton "Map tool" 
   blast/orginfo.xml            dynamique - epicentre. 
-  blast/orginfo_ev.txt         dynamique - evenement
+  blast/orginfo.p              (quick) dynamique - epicentre. 
   blast/orginfo_inventory.xml  dynamique - stations 
 
   html/carrieres.js            dynamique

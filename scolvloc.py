@@ -3,12 +3,17 @@ import numpy
 import closest
 
 def indic1():
+
     import bltools  
-    cfg=bltools.get_config()
     # Load config 
+    cfg=bltools.get_config() # data pathes
     fcar = cfg['file']['quarries'] # Local pathes
-    forg = cfg['file']['origin']
-    ev = bltools.origin(forg)      # xml event 
+    forgp = cfg['file']['originp']
+    
+    #print "origin: "
+    import cPickle as pickle
+    
+    ev = pickle.load( open(forgp, "rb" ) )      # xml event
 
     # print 3 smallest distances to quarries
     c=closest.closest(float(ev['lon']), float(ev['lat']), fcar) 
@@ -29,5 +34,8 @@ def indic1():
     return 0
 
 if __name__ == "__main__":
+    import flushev
+    flushev.flushev(); # Ecriture disque de l'evenement
+    
     import sys
     sys.exit(indic1())
