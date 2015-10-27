@@ -1,12 +1,12 @@
 // Event-dependent variables
-		var lat = 48.493900 
-		var lng = 2.469600 
-		var date = "2015-10-10T10:10:10.0000Z" 
-		var loctime = "12:10" 
-		var dlat = 0.000000 
-		var dlng = 0.000000 
-		var isnight= "Lunch" 
-		var weekday= "Sat" 
-		var idev= "gfz2015tvzz" 
-		var idorg= "Origin#20150922165002.984633.1474" 
-		var m = 0.000000 
+		var lat = 42.937576 
+		var lng = -0.704362 
+		var date = "2015-04-14T04:25:38.822316Z" 
+		var loctime = "06:25" 
+		var dlat = 12.947803 
+		var dlng = 17.278440 
+		var isnight= "Nuit" 
+		var weekday= "Tue" 
+		var idev= "gfz2015hgnp" 
+		var idorg= "Origin#20150414042711.001777.19501" 
+		var m = 3.716308 
