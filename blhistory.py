@@ -16,7 +16,8 @@ def get_local(origin):
     # Read catalog
     cata = np.genfromtxt(cfg['file']['catalog'] \
        , dtype={'names':('id','date','time','lat','lon','depth','auteur','type','Mw')\
-       , 'formats':('S11','S22','S33','f4','f4','f4','S8','S5','f4')})    
+       , 'formats':('S12','S23','S34','f4','f4','f4','S8','S5','f4')})    
+    #   , 'formats':('S11','S22','S33','f4','f4','f4','S8','S5','f4')})    
     # Restrict to 40 km around origin
     radius  = cfg['param']['loc_radius'] # 40. km around origin
     deg2rad = np.pi/180

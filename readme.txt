@@ -14,6 +14,8 @@ Le module se trouve dans un répertoire unique, aucune modification de seiscomp3
 
  Installation :
  --------------
+  Demander par les catalogues d'evenements artificiels. 
+
   sans github: telecharger https://github.com/scresif/blast/archive/master.zip
   mkdir ~/seiscomp3/blast
   y placer les fichiers decomprimes
@@ -21,7 +23,7 @@ Le module se trouve dans un répertoire unique, aucune modification de seiscomp3
   avec github: 
   $ git clone https://github.com/scresif/blast.git ~/seiscomp3/blast (!!a verifier repertoire et pull)
 
-  Seules modifications de config seiscomp3: ajouts labellises
+  Seules modifications de config seiscomp3: 2 ajouts labelises dans scolv.cfg et quesries.cfg
   $ cd ~/seiscomp3/blast
   $ cat cfg/addto_scolv.cfg >>  ~/seiscomp3/etc/scolv.cfg
   $ cat cfg/addto_queries.cfg >>  ~/.seiscomp3/queries.cfg

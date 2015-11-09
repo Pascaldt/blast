@@ -355,24 +355,25 @@
                     var label = '<div style="width:150px; height:185px;s">';
    					label += 
 						'<dl style="overflow:hidden;">' +
-						'<h3>' + "SiHex" + '</h3>'  +					
-						'<dt style="float:left; width:40%; background-color:DarkGray;">Date</dt>' +
+						'<h3>' + formatText(cata[6]) + '</h3>'  +	
+						'<dt style="float:left; width:35%; background-color:DarkGray;overflow:hidden;">Id</dt>' +
+						'<dd style="padding:0; margin:0; float:left; width:60%; background-color:DarkGray;overflow:hidden;">' + cata[0] + '</dd>' +				
+						'<dt style="float:left; width:35%; background-color:DarkGray;">Date</dt>' +
 						'<dd style="padding:0; margin:0; float:left; width:60%; background-color:DarkGray;">' + cata[1] + '</dd>' +
-						'<dt style="float:left; width:40%; background-color:LightGray;">Time</dt>' +
+						'<dt style="float:left; width:35%; background-color:LightGray;">Time</dt>' +
 						'<dd style="padding:0; margin:0; float:left; width:60%; background-color:LightGray;">' + cata[2] + '</dd>' +
-						'<dt style="float:left; width:40%; background-color:LightGray;overflow:hidden;">Deph</dt>' +
+						'<dt style="float:left; width:35%; background-color:LightGray;overflow:hidden;">Deph</dt>' +
 						'<dd style="padding:0; margin:0; float:left; width:60%; background-color:LightGray;overflow:hidden;">' + cata[5] + "(km)" + '</dd>' +
-						'<dt style="float:left; width:40%; background-color:LightGray;overflow:hidden;">Mw</dt>' +
+						'<dt style="float:left; width:35%; background-color:LightGray;overflow:hidden;">Mw</dt>' +
 						'<dd style="padding:0; margin:0; float:left; width:60%; background-color:LightGray;overflow:hidden;">' + cata[8] + '</dd>' +
-						'<dt style="float:left; width:40%; background-color:DarkGray;">Lon</dt>' +
+						'<dt style="float:left; width:35%; background-color:DarkGray;">Lon</dt>' +
 						'<dd style="padding:0; margin:0; float:left; width:60%; background-color:DarkGray;">' + cata[4] + '</dd>' +
-						'<dt style="float:left; width:40%; background-color:DarkGray;overflow:hidden;">Lat</dt>' +
+						'<dt style="float:left; width:35%; background-color:DarkGray;overflow:hidden;">Lat</dt>' +
 						'<dd style="padding:0; margin:0; float:left; width:60%; background-color:DarkGray;overflow:hidden;">' + cata[3] + '</dd>' +
-						'<dt style="float:left; width:40%; background-color:DarkGray;overflow:hidden;">Id</dt>' +
-						'<dd style="padding:0; margin:0; float:left; width:60%; background-color:DarkGray;overflow:hidden;">' + cata[0] + '</dd>' ;
-						'<dt style="float:left; width:40%; background-color:LightGray;overflow:hidden;">Origin</dt>' +
-						'<dd style="padding:0; margin:0; float:left; width:60%; background-color:DarkGray;overflow:hidden;">' + formatText(cata[6]) + '</dd>' ;
-                    label += '</dl> </div>';
+						'<dt style="float:left; width:35%; background-color:DarkGray;overflow:hidden;">Type</dt>' +
+						'<dd style="padding:0; margin:0; float:left; width:60%; background-color:DarkGray;overflow:hidden;">' + formatText(cata[7]) + '</dd>' ;
+
+                                label += '</dl> </div>';
 
 				return label;
 			}
@@ -566,7 +567,7 @@
 				<span style="display:inline-block; vertical-align:middle;"><!-- NO WHITESPACES
 				--><img src="./logo_placemark_circle_highlight.png" title="Event" style="vertical-align:middle;max-width:12px; max-height:12px; border-width:0px;" alt="Catalog">Event, <!-- NO WHITESPACES
 				--><span style="display:inline-block; vertical-align:middle;">
-					SiHex<img src="./logo_quake.png" title="Quake" style="vertical-align:middle; max-width:8px; max-height:8px; border-width:0px;" alt="Catalog">quake <!-- NO WHITESPACES
+					<img src="./logo_quake.png" title="Quake" style="vertical-align:middle; max-width:8px; max-height:8px; border-width:0px;" alt="Catalog">quake <!-- NO WHITESPACES
 				--><img src="./logo_blast.png" title="Blast" style="vertical-align:middle; max-width:8px; max-height:8px; border-width:0px;" alt="Catalog">other <!-- NO WHITESPACES
 				--><span style="display:inline-block; vertical-align:middle;"><!-- NO WHITESPACES
 				-->&nbsp;<img src="./logo_Q-ugc.png" title="Quarry" style="vertical-align:middle; max-width:16px; max-height:16px; border-width:0px;" alt="Quarry">Quarry,&nbsp; 
