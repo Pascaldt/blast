@@ -1,13 +1,12 @@
 #!/usr/bin/python
 # Flush binary event to pickle and xml files
-
 def flushev():
     import seiscomp3.DataModel, seiscomp3.IO
     import os, sys
     import bltools
     
     cfg=bltools.get_config() # data pathes
-    
+
     # Read Origin from stdin
     ar = seiscomp3.IO.BinaryArchive()
     if not ar.open("-"):
@@ -29,10 +28,10 @@ def flushev():
     # extract associated event name   
     try:
         from subprocess import Popen, PIPE
-        stdout = Popen('scquery -d sysop:sysop@localhost/seiscomp3 getevent_mysql ' + idorg, shell=True, stdout=PIPE).stdout
+        sql_req = 'seiscomp exec scquery -d '+ cfg['database']['host'] + ' ' + cfg['database']['getevent_query'] + ' ' + idorg
+        stdout = Popen(sql_req, shell=True, stdout=PIPE).stdout
         idev = stdout.read().strip()  # strip removes trailing line feeds
-        # tester os.popen('scquery -d etc..').read()
-    except:
+    except Exception, exception:
         idev=''
     
     # Quick write to disc, no waiting for sql requests completion 
@@ -50,14 +49,14 @@ def flushev():
     
     # complete origin: Picks, Amplitudes, Magnitudes, Focal mechanism, formtted output, file out 
     forg = cfg['file']['origin']
-    cmd = "seiscomp exec scxmldump -d sysop:sysop@localhost/seiscomp3 -O " + idorg + " -PAMF -f -o " + forg
+    cmd = "seiscomp exec scxmldump -d " + cfg['database']['host'] + " -O " + idorg + " -PAMF -f -o " + forg
     os.system(cmd)  
     
     # Separate export for inventory
     finv = cfg['file']['stations']
-    cmd = "seiscomp exec scxmldump -d sysop:sysop@localhost/seiscomp3 -I -f -o " + finv
+    cmd = "seiscomp exec scquery -d "+ cfg['database']['host'] + " " + cfg['database']['getstation_query'] + " > " + finv
+    print finv
     os.system(cmd)  
-
    
 if __name__ == "__main__":
     flushev()

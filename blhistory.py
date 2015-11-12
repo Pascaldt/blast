@@ -3,7 +3,7 @@
 # Draw plots of historic sismicity
 #
 
-
+import time
 import numpy as np
 import bltools
 cfg=bltools.get_config()    
@@ -72,6 +72,7 @@ def writejs(local):
     #%%
     
 def plotpolar(origin,local):    
+
     # Prepare figure's data
     # ---------------------
 
@@ -131,9 +132,8 @@ def plotpolar(origin,local):
     #%%  === Plot 1 : Radial Date ===   
     # Prepare data
     plt.subplots_adjust(left=0.02, right=0.97, top=0.9, bottom=0.15)    
-    tit3 = "%s (local)\n%-8.4f(lon)\n%-8.4f(lat)\nmag %-4.1f" % (origin['loctime'],origin['lon'],origin['lat'],origin['m'])
+    tit3 = "History\n\n%s (local)\n%-8.4f(lon)\n%-8.4f(lat)\nmag %-4.1f" % (origin['loctime'],origin['lon'],origin['lat'],origin['m'])
     fig.suptitle(tit3,y=0.97,verticalalignment = 'top',weight='bold',horizontalalignment = 'center')
-    fig.suptitle("SiHex",y=0.05,verticalalignment = 'bottom',weight='bold',color='k',fontsize= 'large')
     
     theta = 2*np.pi*np.array(frac_hour)
     
@@ -222,7 +222,7 @@ def plotpolar(origin,local):
 
     (g_lines, g_labels)  = ax2.set_thetagrids(spoke_angles, labelsd, weight='bold')
     plt.draw()
-    plt.show()
+    plt.show(block=True)
 
 #%%    
 if __name__ == "__main__":

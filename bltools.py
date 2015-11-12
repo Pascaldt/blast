@@ -22,68 +22,46 @@ def get_config():
     cfgp['dir'] = BLAST_DIR
     cfgp['file']=dict((x,BLAST_DIR+y) for x,y in cfg.items('file'))
     cfgp['param']=dict((x,float(y)) for x,y in cfg.items('param'))
+    cfgp['database']=dict((x,y) for x,y in cfg.items('database'))
     return cfgp
 
 
-def inventory(file):
-    # All stations inventory xml file
-    # Parse all records fulfilling Inventory/network/station/longitude,
-    # latitude, start or end date.
-    # Parse input file 
+def inventory(filename):
+    # Parse inventory file into a list station lon, lat, start, end.
+
+    inv = []
+    #   Open text file orginfo_inventory.csv
     try:
-        tree = ET.parse(file)
+        file_content = open(filename, 'r').read()
+
     except IOError:
         print "Error parsing ", file 
-        return []
-     
-    # Extract namespace  like {'sc3': 'http://geofon.gfz-potsdam.de/ns/seiscomp3-schema/0.7'}
-    root = tree.getroot()    
-    uri = root.tag.split('{')[1].split('}')[0]
-    namespaces = {'sc3': uri}     
-    
-    # Sweep networks
-    inv = []
-    for nw in root.findall('sc3:Inventory/sc3:network[sc3:station]',namespaces):
-        # Sweep stations
-        for st in nw.findall('sc3:station',namespaces):
-            try: # start-end dates if any
-                start = st.find('sc3:start',namespaces).text
-            except:
-                start=[]
+        return inv
 
-            try:
-                end = st.find('sc3:end',namespaces).text
-            except:
-                end=[]
-                
-            inv.append({'networkCode':nw.get('code'), 'stationCode':st.get('code'), \
-            'longitude':float(st.find('sc3:longitude',namespaces).text), \
-            'latitude':float(st.find('sc3:latitude',namespaces).text), \
-            'start':start, 'end':end})
-            
+    #   text file parse inventory
+    fields = ['networkCode', 'stationCode', 'latitude', 'longitude', 'start', 'end']
+    for current_line in file_content.split('\n'):
+        if current_line == '':
+            continue
+        station = dict(zip(fields, current_line.replace('|', ' ').split()))
+        station['latitude'] = float(station['latitude'])
+        station['longitude'] = float(station['longitude'])
+        inv.append(station)
+
     return inv
 
 def stations(forg,inventory):
-    # list of all detecting/non detecting stations
+    # Combine into detecting/non detecting station list
 
-    # Detecting stations
+    # XML parse origin
     tree = ET.parse(forg)
     root = tree.getroot()    
 
-    # Extract namespace  like {'sc3': 'http://geofon.gfz-potsdam.de/ns/seiscomp3-schema/0.7'}
+    # Get detecting station
+    #   Extract namespace  like {'sc3': 'http://geofon.gfz-potsdam.de/ns/seiscomp3-schema/0.7'}
     uri = root.tag.split('{')[1].split('}')[0]
     namespaces = {'sc3': uri}
-
-    # Enritch inventory with detection information from trigged stations in origin.xml
     detect=[] 
-    
-    #for i,st in inventory:    
-    # Extract all stations producing a pick and containing a 'stationCode' attribute
-    # pick = [] # Get networkCode, stationCode
-    # for st in root.findall('sc3:EventParameters/sc3:pick/sc3:waveformID[@stationCode]',namespaces=namespaces):
-    #    pick.append({'networkCode':st.get('networkCode'), 'stationCode':st.get('stationCode'), \
-    #    'publicID':st.get('publicID')})
-    
     for st in root.findall('sc3:EventParameters/sc3:origin/sc3:arrival',namespaces):        
         # Get network and station code from EventParameters/pick/waveformID 
         pickID = st.find('sc3:pickID',namespaces).text
@@ -99,7 +77,7 @@ def stations(forg,inventory):
                         'timeResidual':float(st.find('sc3:timeResidual',namespaces).text), \
                        })
  
-    # Extend inventory with detection informations azimuth, distance and residual time
+    # Complete inventory information detect/non
     out = []
     for inv in inventory: # Complete inventory with detecting information  
         out.append(inv)
@@ -122,23 +100,22 @@ def stations(forg,inventory):
     return out     
 
 def origin(f):
-# Returns the ascii values of xml origin
+    # Return origin as a dictionary
 
-    # Parse input file 
+    # XML parse origin file
     tree = ET.parse(f)
     root = tree.getroot()    
 
-    # Extract namespace  like {'sc3': 'http://geofon.gfz-potsdam.de/ns/seiscomp3-schema/0.7'}
+    #   Extract namespace  like {'sc3': 'http://geofon.gfz-potsdam.de/ns/seiscomp3-schema/0.7'}
     uri = root.tag.split('{')[1].split('}')[0]
     namespaces = {'sc3': uri}
     
-    # Make sure one origin exactly (event xml may have several)
+    #   Make sure one origin exactly (event xml may have several)
     if len(root.findall('sc3:EventParameters/sc3:origin',namespaces))!= 1:
         print 'origin not unique'
         return []
         
-    # Extract origin infos
-
+    # Build the dictionary
     out = { \
     'idorg':root.find('sc3:EventParameters/sc3:origin',namespaces).get('publicID'), \
     'date':root.find('sc3:EventParameters/sc3:origin/sc3:time/sc3:value',namespaces).text, \
@@ -164,14 +141,14 @@ def origin(f):
     else:
         out['m'] = 0.
             
-    # Local time attribute
+    # Add local time
     from datetime import datetime
     import pytz    # Timezones for local time
     utc = datetime.strptime(out['date'],"%Y-%m-%dT%H:%M:%S.%fZ") # float Timestamp
     loctime =  utc.replace(tzinfo=pytz.utc).astimezone(pytz.timezone('Europe/Paris'))
     out['loctime'] = loctime.strftime("%Y-%m-%d %H:%M:%S")
     
-    # Load event ID
+    # Add event ID
     cfg = get_config()
     import cPickle as pickle
     orgp = pickle.load( open(cfg['file']['originp'], "rb" ) ) # pickle file
@@ -189,7 +166,7 @@ if __name__ == "__main__":
     org = origin(f)
     print org
     
-    f2 = './orginfo_inventory.xml'
+    f2 = './orginfo_inventory.csv'
     
     ivt = inventory(f2)
     #print ivt

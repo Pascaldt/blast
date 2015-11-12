@@ -18,7 +18,7 @@ def indic1():
     # print 3 smallest distances to quarries
     c=closest.closest(float(ev['lon']), float(ev['lat']), fcar) 
 
-    print "-- Resif ---------------------------------------"
+    print '-- Resif ---------------------------------------'
 
     if len(c)>0:   # A value is returned from csv distances to quarries
         print 'D (km)   %5.1f \t| %5.1f \t| %5.1f' % (c[0],c[1],c[2])

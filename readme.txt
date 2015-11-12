@@ -14,7 +14,7 @@ Le module se trouve dans un répertoire unique, aucune modification de seiscomp3
 
  Installation :
  --------------
-  Demander par les catalogues d'evenements artificiels. 
+  Demander par mail les catalogues d'evenements artificiels. 
 
   sans github: telecharger https://github.com/scresif/blast/archive/master.zip
   mkdir ~/seiscomp3/blast
@@ -23,7 +23,7 @@ Le module se trouve dans un répertoire unique, aucune modification de seiscomp3
   avec github: 
   $ git clone https://github.com/scresif/blast.git ~/seiscomp3/blast (!!a verifier repertoire et pull)
 
-  Seules modifications de config seiscomp3: 2 ajouts labelises dans scolv.cfg et quesries.cfg
+  Seules modifications de config seiscomp3: 2 ajouts labelises dans scolv.cfg et queries.cfg
   $ cd ~/seiscomp3/blast
   $ cat cfg/addto_scolv.cfg >>  ~/seiscomp3/etc/scolv.cfg
   $ cat cfg/addto_queries.cfg >>  ~/.seiscomp3/queries.cfg
@@ -33,11 +33,12 @@ Le module se trouve dans un répertoire unique, aucune modification de seiscomp3
 
  Librairies python pyephem et pytz:
  ------------------
-  $ sudo app-get install ephem ou bien sudo pip install ephem avec dependance  
+  $ sudo apt-get install pyephem ou bien sudo pip install pyephem avec dependance
   
  Utilisation :
  ------------- 
-  Mettre a jour les chemins dans blast.cfg. Fermer scolv, puis:
+  Mettre a jour blast.cfg avec chemins, database. 
+  Fermer scolv, puis:
   $ seiscomp exec scolv --debug (le mode debug est facultatif. Il permet de voir si tout va bien)
 
   Sur selection d'une origine, des informations complementaires apparaissent dans scolv/location view : Distance aux 3 plus proches carrieres, bouton "Map tool" affichant vue satellite et diagrammes statistiques
