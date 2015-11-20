@@ -152,8 +152,9 @@ def origin(f):
     cfg = get_config()
     import cPickle as pickle
     orgp = pickle.load( open(cfg['file']['originp'], "rb" ) ) # pickle file
-    out['idev'] = orgp['idev']
-    
+    out['idev']  = orgp['idev']
+    out['typev'] = orgp['typev']
+
     return out     
     
 ###########################################################

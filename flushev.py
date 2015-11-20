@@ -25,7 +25,7 @@ def flushev():
 
     # Export origin from database    
     idorg  = org.publicID()
-    # extract associated event name   
+    # extract associated event name from db   
     try:
         from subprocess import Popen, PIPE
         sql_req = 'seiscomp exec scquery -d '+ cfg['database']['host'] + ' ' + cfg['database']['getevent_query'] + ' ' + idorg
@@ -33,9 +33,17 @@ def flushev():
         idev = stdout.read().strip()  # strip removes trailing line feeds
     except Exception, exception:
         idev=''
-    
+
+    # extract type of event from db  
+    try:
+        sql_req2 = 'seiscomp exec scquery -d '+ cfg['database']['host'] + ' ' + cfg['database']['gettype_query'] + ' ' + idorg
+        stdout = Popen(sql_req2, shell=True, stdout=PIPE).stdout
+        typev = stdout.read().strip()  # strip removes trailing line feeds
+    except Exception, exception:
+        typev='NULL'
+
     # Quick write to disc, no waiting for sql requests completion 
-    ev = {'idev':idev, 'idorg':idorg, 'lon': org.longitude().value(), 'lat': org.latitude().value()}     
+    ev = {'idev':idev, 'idorg':idorg, 'lon': org.longitude().value(), 'lat': org.latitude().value(), 'typev': typev}     
     try:
         ev['lonuncert'] = org.longitude().uncertainty()
         ev['latuncert'] = org.latitude().uncertainty()
@@ -55,7 +63,6 @@ def flushev():
     # Separate export for inventory
     finv = cfg['file']['stations']
     cmd = "seiscomp exec scquery -d "+ cfg['database']['host'] + " " + cfg['database']['getstation_query'] + " > " + finv
-    print finv
     os.system(cmd)  
    
 if __name__ == "__main__":

@@ -1,12 +1,13 @@
 // Event-dependent variables
-		var lat = 45.143372 
-		var lng = 1.155580 
-		var date = "2015-05-12T15:40:44.843452Z" 
-		var loctime = "17:40" 
-		var dlat = 37.351145 
-		var dlng = 24.460811 
+		var lat = 42.957611 
+		var lng = -6.625000 
+		var date = "2015-10-07T11:39:06.351512Z" 
+		var loctime = "13:39" 
+		var dlat = 74.745777 
+		var dlng = 15.855871 
 		var isnight= "Jour" 
-		var weekday= "Tue" 
-		var idev= "gfz2015jgny" 
-		var idorg= "Origin#20150512171212.304419.4864" 
-		var m = 2.993958 
+		var weekday= "Wed" 
+		var idev= "gfz2015tqqk" 
+		var idorg= "Origin#20151007114101.49068.8234" 
+		var m = 3.942151 
+		var typev = "earthquake" 

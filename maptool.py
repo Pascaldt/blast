@@ -6,6 +6,7 @@ Created on Thu Jun 19 16:08:42 2014
 @author: pascal
 """
 def maptool(origin, stations):
+   # Write javascript variables and launch polar plots routine
    # Launch map visu and sismicity plots
     import bltools
     cfg=bltools.get_config()
@@ -30,7 +31,7 @@ def maptool(origin, stations):
     from datetime import datetime
     origin["dayname"]=datetime.strptime(origin["date"],"%Y-%m-%dT%H:%M:%S.%fZ").strftime("%a")
 
-    # Write  origin 
+    # Write javascript origin.js 
     fname = cfg['file']['jsorigin']
     f = open(fname, 'w')
     f.write("// Event-dependent variables\n")
@@ -45,10 +46,10 @@ def maptool(origin, stations):
     f.write('\t\tvar idev= "%s" \n'%origin["idev"])
     f.write('\t\tvar idorg= "%s" \n'%origin["idorg"])
     f.write('\t\tvar m = %f \n'%origin["m"])
+    f.write('\t\tvar typev = "%s" \n'%origin["typev"])
     f.close()
 
-    # Write javascript inventory array 
-    #print origin
+    # Write javascript inventory.js 
     fname = cfg['file']['jsstations']
     g = open(fname, 'w')
     g.write("var stations = [ // networkCode stationCode lon lat detect\n")

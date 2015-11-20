@@ -100,22 +100,27 @@ def plotpolar(origin,local):
     
     #  Graphic common frame
     from matplotlib import pyplot as plt
-    tit = " Local Quakes  "
-    #tit=2
+    tit = " Local history  "
     
-    quakcol = 'DarkOrange' # quake, other events, plots background and frame colors
+    quakcol  = 'DarkOrange' # color selection
     otherscol= 'CornflowerBlue'   
-#    bgcol='AntiqueWhite' 
-    bgcol='Gainsboro' 
-    #bgcol='DarkSlateGray' 
-    frmcol='Olive'
-    #tit = 'Local History (SiHex) of ' + origin['date'] + ' (utc) lon ' + str(origin['lon']) + ' lat ' + str(origin['lat'])
-    if tit not in plt.get_figlabels():     # Create figure or make current
-        fig=plt.figure(num=tit,figsize=(14, 7), facecolor=frmcol) # create       
+    bgcol    ='Gainsboro' 
+    frmcol   ='Olive'
+    if origin['typev'] == 'NULL':
+        orgcol   = 'r'
+    elif origin['typev'] == 'earthquake':
+        orgcol   = quakcol
     else:
-        fig=plt.figure(tit)                                # activate
-        plt.clf()
-        plt.cla()
+        orgcol   = otherscol 
+    print origin['typev']
+
+    #tit = 'Local History (SiHex) of ' + origin['date'] + ' (utc) lon ' + str(origin['lon']) + ' lat ' + str(origin['lat'])
+#    if tit not in plt.get_figlabels():     # Create figure or make current
+    fig=plt.figure(num=tit,figsize=(14, 7), facecolor=frmcol) # create       
+#    else:
+#        fig=plt.figure(tit)                                # activate
+#        plt.clf()
+#        plt.cla()
 
     # Filter trivial cases
     if local == []: 
@@ -150,9 +155,10 @@ def plotpolar(origin,local):
     area = Mwsurf([x['Mw'] for x in local]) # Convert magnitudes to spot surface
     area = np.asarray(area)
     areaorg = Mwsurf(origin['m'])
+
     plt.scatter(theta[natindex], inner[natindex], s=area[natindex], c=quakcol, alpha=.9, linewidth=0.5, zorder=2) #  quakes
     plt.scatter(theta[artfindex], inner[artfindex], s=area[artfindex], c=otherscol, alpha=1, linewidth=0.5, zorder=3) #  artificial    
-    plt.scatter(theta[-1], inner[-1],s=areaorg,c='r',linewidth=0.5,edgecolor='k',zorder=4) # Overplot origin
+    plt.scatter(theta[-1], inner[-1],s=areaorg,c=orgcol,linewidth=0.5,edgecolor='k',zorder=4) # Overplot origin
 
     #  Time angular axis
     labelsy =  ['Time-Date\n 0h', '','2h','','4h','','6h','','8h','','10h','','12h','','14h','','16h','','18h','','20h','','22h',''] # Subtitude labels
@@ -197,17 +203,18 @@ def plotpolar(origin,local):
     
     inner = (0-innerrat*max(dist))/(1-innerrat)
     ax2.set_ylim(inner,max(dist))
-    
+
+    # Plot
     plt.scatter(theta[natindex], dist[natindex],s=area[natindex],c=quakcol,alpha=.9,linewidth=0.5,zorder=2)
     plt.scatter(theta[artfindex], dist[artfindex],s=area[artfindex],c=otherscol,alpha=1,linewidth=0.5,zorder=2)
-    plt.scatter(theta[-1], dist[-1],s=areaorg,c='r',linewidth=0.5,edgecolor='k',zorder=4)
-    #plt.scatter(theta[-1], dist[-1],s=areaorg,facecolors='w',linewidth=3,edgecolors='r',zorder=4)
+    plt.scatter(theta[-1], dist[-1],s=areaorg,c=orgcol,linewidth=0.5,edgecolor='k',zorder=4)
     
-    legd = fig.legend((p1,p2,p3,p4,p5,p6),('Candidate','Quake','Other','Mw <1','  2','  3'),'upper right',scatterpoints=1,prop={'size':10})
+    # Legend
+    legd = fig.legend((p2,p3,p1,p4,p5,p6),('Quake','Other','Unset','Mw <1','  2','  3'),'upper right',scatterpoints=1,prop={'size':10})
     frm = legd.get_frame()
     frm.set_facecolor(bgcol)
 
-    # Custom radial grid
+    # Grid, axis, labels
     val=list(ax2.get_yticks()) 
     lab2 = ['%i' % x for x in val]
     val.insert(0,0.001)
