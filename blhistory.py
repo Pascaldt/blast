@@ -13,26 +13,41 @@ def get_local(origin):
     from datetime import datetime,timedelta
     import pytz
    
-    # Read catalog
-    cata = np.genfromtxt(cfg['file']['catalog'] \
-       , dtype={'names':('id','date','time','lat','lon','depth','auteur','type','Mw')\
-       , 'formats':('S12','S23','S34','f4','f4','f4','S8','S5','f4')})    
-    #   , 'formats':('S11','S22','S33','f4','f4','f4','S8','S5','f4')})    
+    # parse catalog 
+    cata = []
+    try:
+        file_content = open(cfg['file']['catalog'], 'r').read()
+
+    except IOError:
+        print "Error parsing ", file 
+        return cata
+
+    #   text file parse inventory
+    fields = ['id','date','time','lat','lon','depth','auteur','type','Mw']
+    for current_line in file_content.split('\n'):
+        if current_line == '':
+            continue
+        onequake = dict(zip(fields, current_line.split()))
+        onequake['lat'] = float(onequake['lat'])
+        onequake['lon'] = float(onequake['lon'])
+        onequake['depth'] = float(onequake['depth'])
+        onequake['Mw'] = float(onequake['Mw'])
+        
+        cata.append(onequake)
+
     # Restrict to 40 km around origin
-    radius  = cfg['param']['loc_radius'] # 40. km around origin
-    deg2rad = np.pi/180
-    r2 = (cata[:]['lat']-origin['lat'])**2 \
-        + ((cata[:]['lon']-origin['lon'])*np.cos(origin['lat']*deg2rad))**2 # Square distance to origin
+    deg2rad = np.pi/180 # compute all distances
+    r2 = [(x['lat']-origin['lat'])**2+((x['lon']-origin['lon'])*np.cos(origin['lat']*deg2rad))**2 for x in cata]
     R = 6371 # Earth radius (km)
-    iok = [i for i in range(0,cata.size) if r2[i]< (radius/(R*deg2rad))**2] # Tresh 
-    
+    radius  = cfg['param']['loc_radius'] # 40. km around origin
+    iok = [i for i in range(0,len(cata)) if r2[i]< (radius/(R*deg2rad))**2] # Tresh     
     if len(iok) < 1: return []
         
     # Extract catalog inside radius   
-    d = np.sqrt(r2[iok])*R*deg2rad
-    local= [dict(zip(x.dtype.names,x)) for x  in cata[iok]]
+    dist = [np.sqrt(r2[i])*R*deg2rad for i in iok]
+    local= [cata[i] for i in iok]
     for i in xrange(len(local)):
-        local[i]['dist']=d[i]    
+        local[i]['dist']=dist[i]    
     
     # Limit to 10 year seismic history
     half = timedelta(365.25*cfg['param']['loc_timelag']/2.)
@@ -112,7 +127,7 @@ def plotpolar(origin,local):
         orgcol   = quakcol
     else:
         orgcol   = otherscol 
-    print origin['typev']
+    #print origin['typev']
 
     #tit = 'Local History (SiHex) of ' + origin['date'] + ' (utc) lon ' + str(origin['lon']) + ' lat ' + str(origin['lat'])
 #    if tit not in plt.get_figlabels():     # Create figure or make current
